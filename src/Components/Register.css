@@ -1,0 +1,11 @@
+.checkbox{
+    .custom-checkbox input[type="checkbox"] + .form-check-label::before {
+        border: 2px solid #007bff; /* Change the color as needed */
+        background-color: #11569e; /* Change the background color as needed */
+      }
+      
+      .custom-checkbox input[type="checkbox"]:checked + .form-check-label::before {
+        background-color: #007bff; /* Change the color for checked state */
+        border-color: #007bff; /* Change the border color for checked state */
+      }
+}
