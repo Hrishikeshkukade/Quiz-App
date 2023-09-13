@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { collection, where, getDocs, query } from "firebase/firestore";
+import { collection, where, getDocs, query, orderBy } from "firebase/firestore";
 import { jsPDF } from "jspdf";
+
 
 const Profile = () => {
   const styles = {
@@ -23,6 +24,7 @@ const Profile = () => {
   const [userResponses, setUserResponses] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState([]);
+  const [userRank, setUserRank] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -63,6 +65,13 @@ const Profile = () => {
         correctAnswer.push(userData.questionsWithAnswers);
         userResponses.push(userData.questionsWithAnswers);
       });
+      const allUsersQuery = query(collection(db, "user_data"), orderBy("marks", "desc"));
+      const allUsersSnapshot = await getDocs(allUsersQuery);
+      const allUserMarks = allUsersSnapshot.docs.map((doc) => doc.data().marks);
+
+      // Calculate user rank
+      const userRank = allUserMarks.indexOf(userMarks[0]) + 1;
+      setUserRank(userRank);
 
       // Update the state with the user's previous quiz marks and responses
       setPreviousQuizMarks(userMarks);
@@ -143,6 +152,12 @@ const Profile = () => {
           <Card.Text>{name}</Card.Text>
           <Card.Title>Email</Card.Title>
           <Card.Text>{email}</Card.Text>
+          {userRank !== null && 
+          <>
+            <Card.Title>Your Rank</Card.Title>
+            <Card.Text>Rank: {userRank}</Card.Text>
+          </>
+          }
           <Card.Title>Previous Quiz Marks</Card.Title>
           <Card.Text>
             {previousQuizMarks.length === 0 ? (
@@ -163,6 +178,7 @@ const Profile = () => {
               </ul>
             )}
           </Card.Text>
+         
         </Card.Body>
       </Card>
       <br />

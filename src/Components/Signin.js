@@ -188,9 +188,9 @@ const Signin = () => {
       };
   
       handleRedirect();
-    }, [navigate]);
+    }, []);
   
-    return <Spinner />;
+    // return <Spinner />;
   };
 
 

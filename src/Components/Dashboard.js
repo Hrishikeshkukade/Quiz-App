@@ -46,9 +46,9 @@ const Dashboard = () => {
     startTimer();
     setShowResultModal(false);
   };
-  const handleShowResultModal = () => {
-    setShowResultModal(true);
-  };
+  // const handleShowResultModal = () => {
+  //   setShowResultModal(true);
+  // };
   // const handleStartQuiz = () => {
   //   setShowRules(false); // Close the rules modal
   //   setStartQuiz(true); // Start the quiz
@@ -65,6 +65,7 @@ const Dashboard = () => {
       if(startQuiz){
         clearInterval(timer);
         handleSubmit(); // Automatically submit the quiz when time is up
+        // handleShowResultModal();
       }
     
     }, initialTime * 1000); // 3 minutes in milliseconds
@@ -112,7 +113,7 @@ const Dashboard = () => {
   });
   const fetchApiData = async () => {
     try {
-      const res = await fetch("https://opentdb.com/api.php?amount=6");
+      const res = await fetch("https://opentdb.com/api.php?amount=6&category=12");
       const data = await res.json();
       const quizQuestions = data.results.map((question) => {
         const correctIndex = Math.floor(Math.random() * 4); // Randomly select an index for the correct answer
@@ -129,7 +130,7 @@ const Dashboard = () => {
       
     
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 
@@ -163,7 +164,7 @@ const Dashboard = () => {
     
     setTimeLeft(initialTime);
     stopTimer();
-    handleShowResultModal();
+    setShowResultModal(true);
     // const questionsWithAnswers = quizData.map((question, index) => ({
     //   question: question.question,
     //   correctAnswer: question.correct_answer,
@@ -293,29 +294,31 @@ const Dashboard = () => {
                 >
                   Submit
                 </Button>
-                {userMarks !== null && (
-                    <Modal
-                    show={showResultModal}
-                    onHide={() => setShowResultModal(false)}
-                  >
-                    <Modal.Header closeButton>
-                      <Modal.Title>Your Quiz Result</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <p>
-                        You scored {userMarks} out of {quizData.length}
-                      </p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button
-                        variant="primary"
-                        onClick={() => setShowResultModal(false)}
-                      >
-                        Close
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
-                )} 
+                {/* {userMarks !== null && ( */}
+                {showResultModal && <Modal
+                  
+                 
+                  onHide={() => setShowResultModal(false)}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Your Quiz Result</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>
+                      You scored {userMarks} out of {quizData.length}
+                    </p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="primary"
+                      onClick={() => setShowResultModal(false)}
+                    >
+                      Close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>}
+                    
+                {/* )}  */}
               
                 {/* {userMarks !== null && (
                   <p className="mt-3">

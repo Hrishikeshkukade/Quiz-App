@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
+
+
 const styles = {
   container: {
     display: "flex",
@@ -9,6 +11,7 @@ const styles = {
     marginTop: "40px",
     flexWrap: "wrap",
     justifyContent: "center",
+    marginRight: "auto",
   },
   buttonContainer: {
     display: "flex",
@@ -35,14 +38,20 @@ const styles = {
     display: "flex",
     justifyContent: "center",
   },
+ 
 };
 
-const galaxyFoldMediaQuery = "@media (max-width: 500px)";
+const galaxyFoldMediaQuery = "@media (max-width: 375px)";
 
-// Apply styles for Galaxy Fold
+// Apply mergedStyles for Galaxy Fold
 const galaxyFoldStyles = {
   container: {
-   textAlign: "center", // Adjusted margin for smaller screens
+    display: "flex",
+    flexDirection: "column",
+    marginTop: "40px",
+    flexWrap: "wrap",
+    marginLeft: "20px",
+    justifyContent: "center",
   },
 
 };
@@ -53,16 +62,22 @@ const mergedStyles = {
   },
 };
 
+
+
+
+
 const Home = () => {
+ 
+  
   return (
     <>
-      <div style={mergedStyles.container}>
+      <div style={styles.container}>
         <h1>Quiz</h1>
       </div>
-      <div style={mergedStyles.container}>
+      <div style={styles.container}>
         <h2>Register for quiz and build your knowledge</h2>
       </div>
-      {/* <Container style={styles.container}>
+      {/* <Container style={mergedStyles.container}>
         <Row>
           <Col>
             <h1>Quiz</h1>
@@ -83,6 +98,7 @@ const Home = () => {
           Know more
         </Button>
       </div>
+      
     </>
   );
 };
