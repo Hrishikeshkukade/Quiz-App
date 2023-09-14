@@ -4,17 +4,18 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { collection, where, getDocs, query, orderBy } from "firebase/firestore";
 import { jsPDF } from "jspdf";
+import classes from "./Profile.module.css";
 
 
 const Profile = () => {
   const styles = {
-    container: {
-      width: "50%",
-      display: "flex",
-      justifyContent: "center",
-      marginLeft: "100px",
-      marginTop: "50px",
-    },
+    // container: {
+    //   width: "50%",
+    //   display: "flex",
+    //   justifyContent: "center",
+    //   marginLeft: "100px",
+    //   marginTop: "50px",
+    // },
   };
 
   const [name, setName] = useState("");
@@ -70,7 +71,7 @@ const Profile = () => {
       const allUserMarks = allUsersSnapshot.docs.map((doc) => doc.data().marks);
 
       // Calculate user rank
-      const userRank = allUserMarks.indexOf(userMarks[0]) + 1;
+      const userRank = allUserMarks.indexOf(userMarks[0]) - 1;
       setUserRank(userRank);
 
       // Update the state with the user's previous quiz marks and responses
@@ -146,7 +147,7 @@ const Profile = () => {
 
   return (
     <>
-      <Card border="warning" style={styles.container}>
+      <Card border="warning" className={classes.container}>
         <Card.Body>
           <Card.Title>Name</Card.Title>
           <Card.Text>{name}</Card.Text>
@@ -165,7 +166,7 @@ const Profile = () => {
             ) : (
               <ul>
                 {previousQuizMarks.map((marks, index) => (
-                  <li key={index}>
+                  <li className={classes.result} key={index}>
                     Quiz {index + 1}: {marks}
                     <Button
                       variant="secondary"

@@ -1,0 +1,46 @@
+.formContainer {
+    display: flex;
+    width: 34%;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 32%;
+    margin-top: 10%;
+  }
+  .fp {
+    text-align: right;
+    padding: 20px;
+  }
+  
+  @media (max-width: 504px){
+    .formContainer{
+     width: 60%;
+     margin-right: 20%;
+     margin-left: 22%;
+    }
+    
+  }
+  @media (max-width: 412px){
+    .formContainer{
+     width: 50%;
+    margin-left: 25%;
+      
+    }
+    
+  }
+ 
+  @media (max-width: 280px){
+    .formContainer{
+     width: 70%;
+    margin-left: 15%;
+      
+    }
+    
+  }
+  @media (max-width: 414px){
+    .fp{
+        text-align: right;
+        padding: 20px;
+        margin-left: 20px;
+    }
+    
+  }

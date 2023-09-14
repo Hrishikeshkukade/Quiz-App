@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Nav } from "react-bootstrap";
-import "./Register.css";
+import classes from "./Register.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { updateProfile } from "firebase/auth";
@@ -155,7 +155,7 @@ function Register() {
 
   return (
     <React.Fragment>
-      <Form onSubmit={signupHandler} style={styles.formContainer}>
+      <Form onSubmit={signupHandler} className={classes.formContainer}>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Name</Form.Label>
           <Form.Control

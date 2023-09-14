@@ -6,17 +6,18 @@ import {  signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, ge
 import { auth } from "../firebase";
 import ErrorModal from "../UI/Modal";
 import Spinner from "../UI/Spinner";
+import classes from "./Signin.module.css";
 
 const Signin = () => {
   const styles = {
-    formContainer: {
-      display: "flex",
-      width: "34%",
-      flexDirection: "column",
-      justifyContent: "center",
-      marginLeft: "32%",
-      marginTop: "10%",
-    },
+    // formContainer: {
+    //   display: "flex",
+    //   width: "34%",
+    //   flexDirection: "column",
+    //   justifyContent: "center",
+    //   marginLeft: "32%",
+    //   marginTop: "10%",
+    // },
     cardContainer: {
       display: "flex",
       width: "auto",
@@ -32,10 +33,10 @@ const Signin = () => {
       textAlign: "center",
       padding: "20px",
     },
-    fp:{
-      textAlign: "right",
-      padding: "20px"
-    },
+    // fp:{
+    //   textAlign: "right",
+    //   padding: "20px"
+    // },
   };
 
   const [email, setEmail] = useState("");
@@ -195,7 +196,7 @@ const Signin = () => {
 
 
   return (
-    <Form onSubmit={signinHandler} style={styles.formContainer}>
+    <Form onSubmit={signinHandler} className={classes.formContainer}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
@@ -229,7 +230,7 @@ const Signin = () => {
       <Button disabled={isLoading} variant="primary" type="submit">
         {isLoading ? <Spinner /> : "Sign in"}
       </Button>
-      <Nav.Link  as={NavLink} style={styles.fp} to="/fp">Forgot Password</Nav.Link>
+      <Nav.Link  as={NavLink} className={classes.fp} to="/fp">Forgot Password</Nav.Link>
       <ErrorModal
         show={showErrorModal}
         onClose={closeModal}
