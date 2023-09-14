@@ -44,3 +44,11 @@
     }
     
   }
+  @media (max-width: 393px){
+    .formContainer{
+     width: 70%;
+     margin-right: 32%;
+     margin-left: 17%;
+    }
+    
+  }
