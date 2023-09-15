@@ -46,15 +46,7 @@ const Dashboard = () => {
     startTimer();
     setShowResultModal(false);
   };
-  // const handleShowResultModal = () => {
-  //   setShowResultModal(true);
-  // };
-  // const handleStartQuiz = () => {
-  //   setShowRules(false); // Close the rules modal
-  //   setStartQuiz(true); // Start the quiz
-  //   setInitialTime(180);
-  //   startTimer();
-  // };
+
 
   const startTimer = () => {
     const timer = setInterval(() => {
@@ -92,15 +84,7 @@ const Dashboard = () => {
     };
   }, [location, navigate]);
 
-  // const fetchApiData = async () => {
-  //   try {
-  //     const res = await fetch("https://opentdb.com/api.php?amount=10");
-  //     const data = await res.json();
-  //     setQuizData(data.results);
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -164,12 +148,8 @@ const Dashboard = () => {
     
     setTimeLeft(initialTime);
     stopTimer();
-    setShowResultModal(true);
-    // const questionsWithAnswers = quizData.map((question, index) => ({
-    //   question: question.question,
-    //   correctAnswer: question.correct_answer,
-    //   userResponse: userResponses[index], // Add user's response
-    // }));
+    
+
 
     // Prepare user data to submit
     
@@ -182,25 +162,7 @@ const Dashboard = () => {
       })),
       uid: uid,
     };
-    // if (timeLeft > 0) {
-    //   handleShowResultModal(); // Show the result modal
-    //   const userData = {
-    //     marks: marks,
-    //     questionsWithAnswers: quizData.map((question, index) => ({
-    //       question: question.question,
-    //       correctAnswer: question.correct_answer,
-    //       userResponse: userResponses[index],
-    //     })),
-    //     uid: uid,
-    //   };
-    // }
-    // const userData = {
-    //   marks: marks,
-
-    //   // responses: userResponses,
-    //   questionsWithAnswers: questionsWithAnswers,
-    //   uid: uid,
-    // };
+  
 
     try {
       // Add user data to Firestore
@@ -271,17 +233,7 @@ const Dashboard = () => {
                           )
                         )}
 
-                        {/* <li
-                          key="correct"
-                          className={
-                            userResponses[questionIndex] === question.correct_answer
-                              ? "list-group-item list-group-item-success"
-                              : "list-group-item list-group-item"
-                          }
-                         
-                        >
-                          {question.correct_answer}
-                        </li> */}
+                      
                       </ul>
                     </Card.Body>
                   </Card>
@@ -318,13 +270,7 @@ const Dashboard = () => {
                   </Modal.Footer>
                 </Modal>}
                     
-                {/* )}  */}
-              
-                {/* {userMarks !== null && (
-                  <p className="mt-3">
-                    You scored {userMarks} out of {quizData.length}
-                  </p>
-                )} */}
+             
               </div>
             )}
           </div>

@@ -6,18 +6,7 @@ import { collection, where, getDocs, query, orderBy } from "firebase/firestore";
 import { jsPDF } from "jspdf";
 import classes from "./Profile.module.css";
 
-
 const Profile = () => {
-  const styles = {
-    // container: {
-    //   width: "50%",
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   marginLeft: "100px",
-    //   marginTop: "50px",
-    // },
-  };
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [uid, setUid] = useState("");
@@ -66,7 +55,10 @@ const Profile = () => {
         correctAnswer.push(userData.questionsWithAnswers);
         userResponses.push(userData.questionsWithAnswers);
       });
-      const allUsersQuery = query(collection(db, "user_data"), orderBy("marks", "desc"));
+      const allUsersQuery = query(
+        collection(db, "user_data"),
+        orderBy("marks", "desc")
+      );
       const allUsersSnapshot = await getDocs(allUsersQuery);
       const allUserMarks = allUsersSnapshot.docs.map((doc) => doc.data().marks);
 
@@ -84,22 +76,6 @@ const Profile = () => {
     }
   };
 
-  // const fetchCorrectAnswersFromAPI = async (quizIndex) => {
-  //   try {
-  //     // Make an API request to fetch correct answers based on the quiz index
-  //     const response = await fetch(`api.php/${quizIndex}`);
-  //     const data = await response.json();
-
-  //     // Extract the correct answers from the API response
-  //     const correctAnswers = data.correct_answers;
-
-  //     return correctAnswers;
-  //   } catch (error) {
-  //     console.error("Error fetching correct answers from the API: ", error);
-  //     return [];
-  //   }
-  // };
-
   const generateQuizPDF = async (quizIndex) => {
     const doc = new jsPDF();
     doc.setFontSize(12);
@@ -113,9 +89,6 @@ const Profile = () => {
     const quizQuestions = questions[quizIndex];
     const correctAnswers = correctAnswer[quizIndex];
 
-    // const correctAnswers = quizData[quizIndex].correct_answers;
-    // const correctAnswers = await fetchCorrectAnswersFromAPI(quizIndex);
-
     quizQuestions.forEach((question, i) => {
       doc.text(`Question ${i + 1}:`, 10, yPos);
       yPos += 10;
@@ -126,20 +99,6 @@ const Profile = () => {
       doc.text(`Correct Answer: ${correctAnswers[i].correctAnswer}`, 20, yPos);
       yPos += 15; // Add some spacing between questions
     });
-
-    // userAnswers.forEach((userAnswer, i) => {
-    //   doc.text(`Question ${i + 1}:`, 10, yPos);
-    //   yPos += 10;
-    //   doc.text(`Your Answer: ${userAnswer.userResponse}`, 20, yPos);
-    //   yPos += 15; // Add some spacing between questions
-    // });
-
-    // Loop through the questions and add user's answers and correct answers
-    // for (let i = 0; i < userAnswers.length; i++) {
-    //   doc.text(`Question ${i + 1}:`, 10, 20 + i * yPos);
-    //   doc.text(`Your Answer: ${userAnswers[i]}`, 20, 30 + i * yPos);
-    //   doc.text(`Correct Answer: ${correctAnswers[i]}`, 20, 40 + i * yPos);
-    // }
 
     // Save the PDF with a unique filename
     doc.save(`Quiz_${quizIndex + 1}_Results.pdf`);
@@ -153,12 +112,12 @@ const Profile = () => {
           <Card.Text>{name}</Card.Text>
           <Card.Title>Email</Card.Title>
           <Card.Text>{email}</Card.Text>
-          {userRank !== null && 
-          <>
-            <Card.Title>Your Rank</Card.Title>
-            <Card.Text>Rank: {userRank}</Card.Text>
-          </>
-          }
+          {userRank !== null && (
+            <>
+              <Card.Title>Your Rank</Card.Title>
+              <Card.Text>Rank: {userRank}</Card.Text>
+            </>
+          )}
           <Card.Title>Previous Quiz Marks</Card.Title>
           <Card.Text>
             {previousQuizMarks.length === 0 ? (
@@ -179,7 +138,6 @@ const Profile = () => {
               </ul>
             )}
           </Card.Text>
-         
         </Card.Body>
       </Card>
       <br />

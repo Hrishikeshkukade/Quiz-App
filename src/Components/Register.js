@@ -42,7 +42,7 @@ function Register() {
   const [error, setError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  
   const [gender, setGender] = useState("");
 
   const [isNameValid, setNameValid] = useState(true);
@@ -126,7 +126,7 @@ function Register() {
         email: email,
         password: password,
         gender: gender,
-        isAdmin: isAdmin,
+        
         
       })
       
@@ -135,9 +135,7 @@ function Register() {
       navigate("/dashboard");
       sessionStorage.setItem("authenticated", "true");
     } catch (error) {
-      // console.error("Error registering user: ", error.message);
-      // alert(error.message);
-      // alert(error.message);
+    
       if (error.code === "auth/email-already-in-use") {
         setError("Email already exists");
       } 
@@ -223,9 +221,7 @@ function Register() {
             </Form.Text>
           )}
         </Form.Group>
-        {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check  onChange={() => setIsAdmin(true)} className="checkbox" type="checkbox" label="I am Admin" />
-        </Form.Group> */}
+    
         <Button disabled={isLoading} variant="primary" type="submit">
           {isLoading ? (
             <Spinner />
