@@ -7,6 +7,7 @@ import { auth, db } from "../firebase";
 
 
 
+
 // import {BrowserRouter as Router, NavLink} from "react-router-dom";
 
 const NavBar = () => {
@@ -65,9 +66,9 @@ const NavBar = () => {
         // An error happened.
       });
   };
-  // const imageSource = authenticatedUser && gender ?
-  // `./public/Boy.jpg` :
-  // '';
+  const imageSource = authenticatedUser && gender === "male" ?
+  `/Boy.jpg` :
+  'Girl.jpg';
   if(loading){
     return ;
   }
@@ -87,7 +88,12 @@ const NavBar = () => {
                   styles={styles.dropdown}
                 >
                   
-      
+                  <img
+                  src={imageSource}
+                  alt="Profile"
+                  className="rounded-circle"
+                  style={{ width: "40px", height: "40px" }}
+                />
           {/* <Row>
           <Col xs={6} md={4}>
           <Image src={`./public/Boy.jpg/${authenticatedUser.gender}`} roundedCircle />
