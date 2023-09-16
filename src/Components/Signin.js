@@ -91,7 +91,7 @@ const Signin = () => {
       // Start the Google sign-in process with a redirect
       await signInWithRedirect(auth, provider);
     } catch (error) {
-      console.error("Google Sign-In Error:", error);
+      console.log("Google Sign-In Error:", error);
     }
   };
 

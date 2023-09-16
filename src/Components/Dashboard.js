@@ -97,7 +97,7 @@ const Dashboard = () => {
   });
   const fetchApiData = async () => {
     try {
-      const res = await fetch("https://opentdb.com/api.php?amount=6&category=12");
+      const res = await fetch("https://opentdb.com/api.php?amount=6&category=9&difficulty=easy");
       const data = await res.json();
       const quizQuestions = data.results.map((question) => {
         const correctIndex = Math.floor(Math.random() * 4); // Randomly select an index for the correct answer
