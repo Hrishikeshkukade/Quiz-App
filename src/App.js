@@ -12,6 +12,7 @@ import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Profile from "./Components/Profile";
 import About from "./Components/About";
+import Reviews from "./Components/Reviews";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -64,6 +65,7 @@ function App() {
         {/* <Route exact path="/dashboard" element={<Dashboard />}/> */}
         <Route exact path="/fp" element={<ForgotPassword />} />
         <Route exact path="/about" element={<About />} />
+        <Route exact path="/reviews" element={<Reviews />} />
       </Routes>
     </Main>
     // {/* <Route path="/" exact>
