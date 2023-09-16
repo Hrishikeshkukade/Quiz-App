@@ -25,6 +25,7 @@
   .reviews {
     justify-content: center;
     margin-left: 45%;
+   
   }
   .review-rating {
     font-weight: bold;
@@ -50,6 +51,30 @@
   .review-button:hover {
     background-color: #0056b3;
   }
+  @media (max-width: 1024px){
+    .reviews{
+       margin-left: 44%;
+    }
+       
+     }
+  @media (max-width: 912px){
+    .reviews{
+       margin-left: 42%;
+    }
+       
+     }
+  @media (max-width: 820px){
+    .reviews{
+       margin-left: 41%;
+    }
+       
+     }
+     @media (max-width: 500px){
+      .reviews{
+         margin-left: 38%;
+      }
+         
+       }
   @media (max-width: 480px){
  .reviews{
     margin-left: 39%;

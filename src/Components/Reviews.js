@@ -11,10 +11,13 @@ const Reviews = () => {
   const [showModal, setShowModal] = useState(false);
   const [showThanksModal, setShowThanksModal] = useState(false);
   const [name, setName] = useState("");
-  const [rating, setRating] = useState(0);
+  const [email, setEmail] = useState("");
+  const [isEmailValid, setEmailValid] = useState(true);
+  const [rating, setRating] = useState(1);
   const [reviewText, setReviewText] = useState("");
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isButtonLoading, setIsButtonLoading] = useState(false)
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
@@ -31,8 +34,17 @@ const Reviews = () => {
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
 
-  const handleSubmitReview = async() => {
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail);
+    setEmailValid(isValid);
+  };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    setIsButtonLoading(true);
     // Save the review to Firestore
     // db.collection("reviews").add({
     //   name: name,
@@ -42,75 +54,75 @@ const Reviews = () => {
     // });
 
     const docRef = await addDoc(collection(db, "reviews"), {
-        
-        name: name,
-        rating: rating,
-        text: reviewText,
-        
-        
-      })
+      name: name,
+      email: email,
+      rating: rating,
+      text: reviewText,
+    });
 
     // Close the modal and clear the input fields
+    setIsButtonLoading(false);
     setShowModal(false);
-    setRating(0);
+    setRating(1);
     setReviewText("");
     setShowThanksModal(true);
   };
 
-    useEffect(() => {
-      // Fetch existing reviews from Firestore
-  
-      const fetchReviews = async () => {
-        try{
-            const reviewsRef = collection(db, "reviews");
-            const snapshot = await getDocs(reviewsRef)
-            const reviewsData = snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
-            reviewsData.sort((a, b) => b.rating - a.rating);
-            setReviews(reviewsData);
-            setIsLoading(false)
-        }catch(error){
-            if(error){
-                return <p>Something went wrong</p>
-            }
-            setIsLoading(false);
-        }
-       
-      };
+  useEffect(() => {
+    // Fetch existing reviews from Firestore
 
-      fetchReviews();
-      
-    }, []);
+    const fetchReviews = async () => {
+      try {
+        const reviewsRef = collection(db, "reviews");
+        const snapshot = await getDocs(reviewsRef);
+        const reviewsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        reviewsData.sort((a, b) => b.rating - a.rating);
+        setReviews(reviewsData);
+        setIsLoading(false);
+      } catch (error) {
+        if (error) {
+          return <p>Something went wrong</p>;
+        }
+        setIsLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
 
   return (
     <div className="review-container">
-        <div className="reviews">
+      <div className="reviews">
         <h2>Reviews</h2>
-    <Button variant="success" onClick={handleShowModal}>
-      Give Review
-    </Button>
-        </div>
-    {isLoading && <Spinner />}
+        <Button variant="success" onClick={handleShowModal}>
+          Give Review
+        </Button>
+      </div>
+      {isLoading && <Spinner />}
 
-    <ul className="review-list">
-      {reviews.map((review) => (
-        <li key={review.id} className="review-item">
-          <div className="review-rating">Name: {review.name}</div>  
-          <div className="review-rating">Rating: {review.rating} stars</div>
-          <div className="review-text">Review: <span className="review-rating">{review.name}</span> says {review.text}</div>
-        </li>
-      ))}
-    </ul>
-    
+      <ul className="review-list">
+        {reviews.map((review) => (
+          <li key={review.id} className="review-item">
+            <div className="review-rating">Name: {review.name}</div>
+            <div className="review-rating">Rating: {review.rating} stars</div>
+            <div className="review-text">
+              Review: <span className="review-rating">{review.name}</span> says{" "}
+              {review.text}
+            </div>
+          </li>
+        ))}
+      </ul>
+
       {/* Modal for giving a review */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Give Review</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={handleSubmitReview}>
             <Form.Group>
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -119,6 +131,18 @@ const Reviews = () => {
                 onChange={handleNameChange}
                 required
               />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
+               {!isEmailValid && (
+          <Form.Text className="text-danger">Invalid email</Form.Text>
+        )}
             </Form.Group>
             <Form.Group>
               <Form.Label>Rating</Form.Label>
@@ -136,16 +160,16 @@ const Reviews = () => {
                 required
               />
             </Form.Group>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseModal}>
+                Close
+              </Button>
+              <Button disabled={isButtonLoading} type="submit" variant="primary">
+              {isButtonLoading ? <Spinner /> : "Submit Review"}
+              </Button>
+            </Modal.Footer>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmitReview}>
-            Submit Review
-          </Button>
-        </Modal.Footer>
       </Modal>
       <Modal show={showThanksModal} onHide={handleCloseThanksModal}>
         <Modal.Header closeButton>

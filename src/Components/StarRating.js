@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./StarRating.css";
 
 const StarRating = ({ rating, onChange }) => {
-  const stars = [1, 2, 3, 4, 5]; // You can customize the number of stars
+  const stars = [1, 2, 3, 4, 5]; 
 
   const handleStarClick = (selectedRating) => {
     onChange(selectedRating);
