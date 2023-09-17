@@ -4,35 +4,14 @@ import classes from "./Register.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { updateProfile } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../firebase";
-import ErrorModal from "../UI/Modal";
-import Spinner from "../UI/Spinner";
-
-const styles = {
-  formContainer: {
-    display: "flex",
-    width: "34%",
-    flexDirection: "column",
-    justifyContent: "center",
-    marginLeft: "32%",
-    marginTop: "5%",
-  },
-  cardContainer: {
-    display: "flex",
-    width: "auto",
-    flexDirection: "column",
-    justifyContent: "center",
-    marginLeft: "32%",
-    marginTop: "10%",
-  },
-  span: {
-    display: "flex",
-    justifyContent: "center",
-    padding: "20px",
-  },
-};
+import { db } from "../../firebase";
+import ErrorModal from "../../UI/Modal";
+import Spinner from "../../UI/Spinner";
+import debounce from "lodash/debounce";
+import styles from "./RegisterStyles";
+import constant from "../../config/Constant";
 
 function Register() {
   const [name, setName] = useState("");
@@ -60,30 +39,53 @@ function Register() {
     }
   }, [navigate]);
 
-  const nameChangeHandler = (e) => {
-    const newName = e.target.value;
+   // Debounce the name change handler
+  
+   const debouncedNameChangeHandler = debounce((newName) => {
     setName(newName);
     setNameValid(newName.trim() !== ""); // Basic validation
+  }, 1000);
+  const nameChangeHandler = (e) => {
+    const newName = e.target.value;
+    debouncedNameChangeHandler(newName);
   };
+
+  // Debounce the email change handler
+  const debouncedEmailChangeHandler = debounce((newEmail) => {
+    setEmail(newEmail);
+
+    const isValid = constant.emailConstant.test(newEmail);
+    setEmailValid(isValid);
+  }, 1000);
 
   const emailChangeHandler = (e) => {
     const newEmail = e.target.value;
-    setEmail(newEmail);
-
-    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail);
-    setEmailValid(isValid);
+    debouncedEmailChangeHandler(newEmail);
   };
 
-  const passwordChangeHandler = (e) => {
-    setPassword(e.target.value);
-    const newPassword = e.target.value;
+  // Debounce the password change handler
+  const debouncedPasswordChangeHandler = debounce((newPassword) => {
     setPassword(newPassword);
     setPasswordValid(newPassword.length >= 6);
+  }, 1000);
+
+  const passwordChangeHandler = (e) => {
+    const newPassword = e.target.value;
+    debouncedPasswordChangeHandler(newPassword);
   };
+
+  // Debounce the confirm password change handler
+  const debouncedConfirmPasswordChangeHandler = debounce(
+    (newConfirmPassword) => {
+      setConfirmPassword(newConfirmPassword);
+      setConfirmPasswordValid(newConfirmPassword === password);
+    },
+    1000
+  );
+
   const confirmPasswordChangeHandler = (e) => {
     const newConfirmPassword = e.target.value;
-    setConfirmPassword(newConfirmPassword);
-    setConfirmPasswordValid(newConfirmPassword === password);
+    debouncedConfirmPasswordChangeHandler(newConfirmPassword);
   };
   const closeModal = () => {
     setShowErrorModal(false);
@@ -157,13 +159,13 @@ function Register() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Name</Form.Label>
           <Form.Control
-            value={name}
+            
             onChange={nameChangeHandler}
             type="text"
             placeholder="Enter Your Name"
             required
           />
-          {!isNameValid && (
+          {!isNameValid && name && (
             <Form.Text className="text-danger">Name is required</Form.Text>
           )}
         </Form.Group>
@@ -184,10 +186,10 @@ function Register() {
             placeholder="Enter email"
             required
           />
-          <Form.Text className="text-muted">
+          {/* <Form.Text className="text-muted">
             We'll never share your email with anyone else.
-          </Form.Text>
-          {!isEmailValid && (
+          </Form.Text> */}
+          {!isEmailValid && email && (
             <Form.Text className="text-danger">Invalid email</Form.Text>
           )}
         </Form.Group>
@@ -201,7 +203,7 @@ function Register() {
             required
           />
 
-          {!isPasswordValid && (
+          {!isPasswordValid && password && (
             <Form.Text className="text-danger">
               Password must be at least 6 characters long
             </Form.Text>
@@ -215,7 +217,7 @@ function Register() {
             placeholder="Confirm Password"
             required
           />
-          {!isConfirmPasswordValid && (
+          {!isConfirmPasswordValid && confirmPassword && (
             <Form.Text className="text-danger">
               Passwords do not match
             </Form.Text>

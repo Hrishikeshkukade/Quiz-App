@@ -1,18 +1,18 @@
 import "./App.css";
 import { BrowserRouter as Main, Route, Routes} from "react-router-dom";
-import Home from "./Components/Home";
+import Home from "./Components/Home/Home";
 import NavBar from "./UI/Navbar";
-import Register from "./Components/Register";
-import Signin from "./Components/Signin";
-import Dashboard from "./Components/Dashboard";
-import ForgotPassword from "./Components/ForgotPassword";
+import Register from "./Components/Register/Register";
+import Signin from "./Components/Signin/Signin";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Profile from "./Components/Profile";
-import About from "./Components/About";
-import Reviews from "./Components/Reviews";
+import Profile from "./Components/Profile/Profile";
+import About from "./Components/About/About";
+import Reviews from "./Components/Reviews/Reviews";
 
 function App() {
   const [user, setUser] = useState(null);

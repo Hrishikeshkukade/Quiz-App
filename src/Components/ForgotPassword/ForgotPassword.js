@@ -1,22 +1,13 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 // import { updatePassword, get } from "firebase/auth";
 import { sendPasswordResetEmail } from "firebase/auth";
-import Spinner from "../UI/Spinner";
-
+import Spinner from "../../UI/Spinner";
+import styles from "./ForgotPasswordStyles";
 
 const ForgotPassword = () => {
-    const styles = {
-        formContainer: {
-            display: "flex",
-            width: "34%",
-            flexDirection: "column",
-            justifyContent: "center",
-            marginLeft: "32%",
-            marginTop: "10%",
-          },
-    }
+  
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 

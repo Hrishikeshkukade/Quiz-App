@@ -2,39 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { Modal } from "react-bootstrap";
+import styles from "./DashboardStyles";
 
-import Rules from "./Rules";
+import Rules from "../Rules";
 
 const Dashboard = () => {
-  const styles = {
-    button1: {
-      marginLeft: "37%",
-      justifyContent: "center",
-    },
-    button2:{
-      justifyContent: "center",
-      marginLeft: "10%",
-      margin: "20px"
-    },
-    heading: {
-      marginLeft: "20px",
-    },
-  };
-
+  
   const [quizData, setQuizData] = useState([]);
   const [uid, setUid] = useState("");
   const [name, setName] = useState("");
   const [startQuiz, setStartQuiz] = useState(false);
   const [userResponses, setUserResponses] = useState([]);
   const [userMarks, setUserMarks] = useState(null); // State for user marks
-  const [showRules, setShowRules] = useState(true);
+  const [showRules, setShowRules] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180);
   const [initialTime, setInitialTime] = useState(180);
   const [timerInterval, setTimerInterval] = useState(null);
-  const [showResultModal, setShowResultModal] = useState(false);
+
+
+
+  // const [showResultModal, setShowResultModal] = useState(false);
   // const [correctAnswers, setCorrectAnswers] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,9 +34,11 @@ const Dashboard = () => {
     setStartQuiz(true); // Start the quiz
     setInitialTime(180);
     startTimer();
-    setShowResultModal(false);
+   
   };
 
+
+  
 
   const startTimer = () => {
     const timer = setInterval(() => {
@@ -67,6 +59,11 @@ const Dashboard = () => {
     clearInterval(timerInterval); // Clear the interval to stop the timer
     setTimeLeft(initialTime)
   };
+  const startQuizHandler = () => {
+    setShowRules(true);
+    
+  }
+  
 
   useEffect(() => {
     const handleBackButton = (e) => {
@@ -130,6 +127,9 @@ const Dashboard = () => {
     setUserResponses(updatedResponses);
   };
 
+ 
+  
+
   const handleSubmit = async () => {
     // Calculate user marks
     let marks = 0;
@@ -140,14 +140,15 @@ const Dashboard = () => {
       if (userResponse === question.correct_answer) {
         marks++;
       }
+      
     }
-
     // Set user marks in state
+   
     setUserMarks(marks);
     setStartQuiz(false);
-    
     setTimeLeft(initialTime);
     stopTimer();
+    
     
 
 
@@ -168,10 +169,14 @@ const Dashboard = () => {
       // Add user data to Firestore
       const docRef = await addDoc(collection(db, "user_data"), userData);
       console.log("User data submitted with ID: ", docRef.id);
-    
+      // setShowResultModal(true);
+      
     } catch (error) {
       console.error("Error submitting user data: ", error);
+      // showErrorToast("An error occurred while submitting user data");
+    
     }
+    
   };
 
   return (
@@ -180,7 +185,8 @@ const Dashboard = () => {
         <h1 style={styles.heading} className="mt-4">
           Welcome to the Dashboard, {name}
         </h1>
-        {!startQuiz && (
+     
+        {/* {!startQuiz && (
           <Button
             variant="primary"
             style={styles.button2}
@@ -188,7 +194,7 @@ const Dashboard = () => {
           >
             View Rules
           </Button>
-        )}
+        )} */}
         {/* Display the rules modal */}
         <Rules
           show={showRules}
@@ -198,8 +204,8 @@ const Dashboard = () => {
         {!startQuiz ? (
           <Button
             variant="primary"
-           
-            onClick={handleAcceptRules}
+            style={styles.button2}
+            onClick={startQuizHandler}
           >
             Start Quiz
           </Button>
@@ -209,6 +215,13 @@ const Dashboard = () => {
               <p>Loading questions...</p>
             ) : (
               <div>
+                <div className="sticky-top" style={{ top: '0', zIndex: '100' }}>
+            {startQuiz && (
+              <div style={styles.button2}>
+                <p style={styles.timeDisplay}>Time Left: {timeLeft} seconds</p>
+              </div>
+            ) }
+          </div>
                 {quizData.map((question, questionIndex) => (
                   <Card key={questionIndex} className="mt-3">
                     <Card.Body>
@@ -247,9 +260,9 @@ const Dashboard = () => {
                   Submit
                 </Button>
                 {/* {userMarks !== null && ( */}
-                {showResultModal && <Modal
+                {/* <Modal
                   
-                 
+                show={showResultModal}
                   onHide={() => setShowResultModal(false)}
                 >
                   <Modal.Header closeButton>
@@ -268,17 +281,18 @@ const Dashboard = () => {
                       Close
                     </Button>
                   </Modal.Footer>
-                </Modal>}
-                    
+                </Modal> 
+                     */}
              
               </div>
             )}
           </div>
         )}
       </div>
-      <div style={styles.button2}>
+      {/* {startQuiz ?  <div style={styles.button2}>
         <p>Time Left: {timeLeft} seconds</p>
-      </div>
+      </div> : null} */}
+
     </div>
   );
 };

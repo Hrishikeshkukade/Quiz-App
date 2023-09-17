@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { collection, where, getDocs, query, orderBy } from "firebase/firestore";
 import { jsPDF } from "jspdf";
 import classes from "./Profile.module.css";

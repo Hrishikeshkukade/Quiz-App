@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Spinner } from "react-bootstrap";
-import { db } from "../firebase";
-import StarRating from "./StarRating";
+import { db } from "../../firebase";
+import StarRating from "../StarRating/StarRating";
 import { addDoc, getDocs } from "firebase/firestore";
 import { collection } from "firebase/firestore";
 import "./Reviews.css";
-import LoadingSpinner from "../UI/Spinner";
+import LoadingSpinner from "../../UI/Spinner";
+import debounce from "lodash/debounce";
+
+
 
 const Reviews = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,12 +37,15 @@ const Reviews = () => {
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
-  const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
+  const debouncedEmailChangeHandler = debounce((newEmail) => {
     setEmail(newEmail);
-
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail);
     setEmailValid(isValid);
+  }, 1000); // Adjust the delay time as needed (e.g., 300 milliseconds)
+
+  const emailChangeHandler = (e) => {
+    const newEmail = e.target.value;
+    debouncedEmailChangeHandler(newEmail);
   };
 
   const handleSubmitReview = async (e) => {
@@ -59,7 +65,7 @@ const Reviews = () => {
       rating: rating,
       text: reviewText,
     });
-
+   
     // Close the modal and clear the input fields
     setIsButtonLoading(false);
     setShowModal(false);
@@ -136,11 +142,11 @@ const Reviews = () => {
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
-                value={email}
-                onChange={handleEmailChange}
+               
+                onChange={emailChangeHandler}
                 required
               />
-               {!isEmailValid && (
+               {!isEmailValid && email && (
           <Form.Text className="text-danger">Invalid email</Form.Text>
         )}
             </Form.Group>

@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Nav } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-import GoogleSigninButtton from "../UI/GoogleSigninButton";
+import GoogleSigninButtton from "../../UI/GoogleSigninButton/GoogleSigninButton";
+import debounce from "lodash/debounce";
+import constant from "../../config/Constant";
+
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
 } from "firebase/auth";
-import { auth } from "../firebase";
-import ErrorModal from "../UI/Modal";
-import Spinner from "../UI/Spinner";
+import { auth } from "../../firebase";
+import ErrorModal from "../../UI/Modal";
+import Spinner from "../../UI/Spinner";
 import classes from "./Signin.module.css";
 
 const Signin = () => {
@@ -25,20 +28,27 @@ const Signin = () => {
 
   const navigate = useNavigate();
 
+  const debouncedEmailChangeHandler = debounce((newEmail) => {
+    setEmail(newEmail);
+    const isValid = constant.emailConstant.test(newEmail);
+    setEmailValid(isValid);
+  }, 1000); // Adjust the delay time as needed (e.g., 300 milliseconds)
+
   const emailChangeHandler = (e) => {
     const newEmail = e.target.value;
-    setEmail(newEmail);
-
-    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail);
-    setEmailValid(isValid);
+    debouncedEmailChangeHandler(newEmail);
   };
+
+  // Add debouncing for password input
+  const debouncedPasswordChangeHandler = debounce((newPassword) => {
+    setPassword(newPassword);
+    setPasswordValid(newPassword.length >= 6);
+  }, 1000); // Adjust the delay time as needed (e.g., 300 milliseconds)
 
   const passwordChangeHandler = (e) => {
     const newPassword = e.target.value;
-    setPassword(newPassword);
-    setPasswordValid(newPassword.length >= 6);
+    debouncedPasswordChangeHandler(newPassword);
   };
-
   const closeModal = () => {
     setShowErrorModal(false);
   };
@@ -133,13 +143,14 @@ const Signin = () => {
           placeholder="Enter email"
           required
         />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-
-        {!isEmailValid && (
+         {!isEmailValid && email && (
           <Form.Text className="text-danger">Invalid email</Form.Text>
         )}
+        {/* <Form.Text className="text-muted">
+          We'll never share your email with anyone else.
+        </Form.Text> */}
+
+       
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
@@ -149,7 +160,7 @@ const Signin = () => {
           placeholder="Password"
           required
         />
-        {!isPasswordValid && (
+        {!isPasswordValid && password && (
           <Form.Text className="text-danger">
             Password must be at least 6 characters long
           </Form.Text>
