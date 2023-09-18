@@ -5,6 +5,8 @@ import { auth, db } from "../../firebase";
 import { collection, where, getDocs, query, orderBy } from "firebase/firestore";
 import { jsPDF } from "jspdf";
 import classes from "./Profile.module.css";
+import notify from "../../config/Notify";
+import { ToastContainer } from "react-toastify";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -73,6 +75,7 @@ const Profile = () => {
       setCorrectAnswer(correctAnswer);
     } catch (error) {
       console.error("Error fetching user data: ", error);
+      notify("Error fetching previous quiz marks", true);
     }
   };
 
@@ -141,6 +144,18 @@ const Profile = () => {
         </Card.Body>
       </Card>
       <br />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </>
   );
 };

@@ -105,33 +105,33 @@ const Signin = () => {
     }
   };
 
-  const GoogleSignInRedirect = () => {
-    const navigate = useNavigate();
+  // const GoogleSignInRedirect = () => {
+  //   const navigate = useNavigate();
 
-    useEffect(() => {
-      const handleRedirect = async () => {
-        try {
-          // Complete the Google sign-in process after the redirect
-          const result = await getRedirectResult(auth);
+  //   useEffect(() => {
+  //     const handleRedirect = async () => {
+  //       try {
+  //         // Complete the Google sign-in process after the redirect
+  //         const result = await getRedirectResult(auth);
 
-          if (result.user) {
-            // User is now signed in with Google.
-            sessionStorage.setItem("authenticated", "true");
-            navigate("/dashboard");
-          } else {
-            // Handle the case where sign-in was not successful
-            console.error("Google Sign-In Error: Sign-in was not successful");
-          }
-        } catch (error) {
-          console.error("Google Sign-In Error:", error);
-        }
-      };
+  //         if (result.user) {
+  //           // User is now signed in with Google.
+  //           sessionStorage.setItem("authenticated", "true");
+  //           navigate("/dashboard");
+  //         } else {
+  //           // Handle the case where sign-in was not successful
+  //           console.error("Google Sign-In Error: Sign-in was not successful");
+  //         }
+  //       } catch (error) {
+  //         console.error("Google Sign-In Error:", error);
+  //       }
+  //     };
 
-      handleRedirect();
-    }, []);
+  //     handleRedirect();
+  //   }, []);
 
-    // return <Spinner />;
-  };
+  //   // return <Spinner />;
+  // };
 
   return (
     <Form onSubmit={signinHandler} className={classes.formContainer}>
@@ -177,8 +177,8 @@ const Signin = () => {
         onClose={closeModal}
         errorMessage={error}
       />
-      <GoogleSigninButtton onClick={GoogleSigninHandler} />
-      <GoogleSignInRedirect /> {/* Render the redirection component */}
+      {/* <GoogleSigninButtton  />
+      <GoogleSignInRedirect /> Render the redirection component */}
     </Form>
   );
 };

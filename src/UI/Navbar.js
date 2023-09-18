@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Navbar, Nav, Dropdown } from "react-bootstrap";
+import {
+  Container,
+  Navbar,
+  Nav,
+  Dropdown,
+  Modal,
+  Button,
+} from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 // import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -23,9 +30,9 @@ const NavBar = () => {
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
-    
     const listenAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         const userEmail = user.email;
@@ -45,6 +52,13 @@ const NavBar = () => {
 
   const navigate = useNavigate();
 
+  const logoutModalHandler = () => {
+    setShowLogoutModal(true);
+  };
+  const hideLogoutModal = () => {
+    setShowLogoutModal(false);
+  };
+
   const logoutHandler = () => {
     signOut(auth)
       .then(() => {
@@ -57,6 +71,7 @@ const NavBar = () => {
         console.log(error);
         // An error happened.
       });
+      setShowLogoutModal(false)
   };
   // const imageSource = authenticatedUser && gender === "male" ?
   // `/Boy.jpg` :
@@ -83,7 +98,11 @@ const NavBar = () => {
                     src="/blank.jpg"
                     alt="Profile"
                     className="rounded-circle"
-                    style={{ width: "40px", height: "40px", marginRight: "4px" }}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      marginRight: "4px",
+                    }}
                   />
                   {/* <Row>
           <Col xs={6} md={4}>
@@ -97,11 +116,16 @@ const NavBar = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
+                  <Dropdown.Item as={NavLink} to="/dashboard">
+                    Dashboard
+                  </Dropdown.Item>
                   <Dropdown.Item as={NavLink} to="/profile">
                     Profile
                   </Dropdown.Item>
                   {/* <Dropdown.Item href="#settings">Settings</Dropdown.Item> */}
-                  <Dropdown.Item onClick={logoutHandler}>Logout</Dropdown.Item>
+                  <Dropdown.Item onClick={logoutModalHandler}>
+                    Logout
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
@@ -125,6 +149,22 @@ const NavBar = () => {
             )}
           </Nav>
         </Navbar.Collapse>
+        {showLogoutModal && (
+          <Modal show={showLogoutModal} onHide={hideLogoutModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm Logout</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to Logout?</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={hideLogoutModal}>
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={logoutHandler}>
+                Logout
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
       </Container>
     </Navbar>
   );
