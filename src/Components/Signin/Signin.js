@@ -17,21 +17,34 @@ import Spinner from "../../UI/Spinner";
 import classes from "./Signin.module.css";
 
 const Signin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [validation, setValidation] = useState({
+    isEmailValid: true,
+    isPasswordValid: true,
+  });
   const [error, setError] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isEmailValid, setEmailValid] = useState(true);
-  const [isPasswordValid, setPasswordValid] = useState(true);
+  
 
   const navigate = useNavigate();
 
   const debouncedEmailChangeHandler = debounce((newEmail) => {
-    setEmail(newEmail);
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      email: newEmail,
+    }));
     const isValid = constant.emailConstant.test(newEmail);
-    setEmailValid(isValid);
+    setValidation((prevValidation) => ({
+      ...prevValidation,
+      isEmailValid: isValid,
+    }));
   }, 1000); // Adjust the delay time as needed (e.g., 300 milliseconds)
 
   const emailChangeHandler = (e) => {
@@ -41,8 +54,15 @@ const Signin = () => {
 
   // Add debouncing for password input
   const debouncedPasswordChangeHandler = debounce((newPassword) => {
-    setPassword(newPassword);
-    setPasswordValid(newPassword.length >= 6);
+    setFormData((prevData) => ({
+      ...prevData,
+      password: newPassword,
+    }));
+    const isValid = newPassword.length >= 6;
+    setValidation((prevValidation) => ({
+      ...prevValidation,
+      isPasswordValid: isValid,
+    }));
   }, 1000); // Adjust the delay time as needed (e.g., 300 milliseconds)
 
   const passwordChangeHandler = (e) => {
@@ -55,7 +75,7 @@ const Signin = () => {
 
   const signinHandler = async (e) => {
     e.preventDefault();
-    if (!isEmailValid || !isPasswordValid) {
+    if (!validation.isEmailValid || !validation.isPasswordValid) {
       // Handle validation error, show a message, etc.
       return;
     }
@@ -65,8 +85,8 @@ const Signin = () => {
       // Sign in the user with email and password
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        email,
-        password
+        formData.email,
+        formData.password
       );
       const user = userCredential.user;
       console.log(user);
@@ -90,8 +110,10 @@ const Signin = () => {
     } finally {
       setIsLoading(false); // Stop loading
     }
-    setEmail("");
-    setPassword("");
+    setFormData({
+      email: "",
+      password: "",
+    });
   };
 
   const GoogleSigninHandler = async () => {
@@ -143,7 +165,7 @@ const Signin = () => {
           placeholder="Enter email"
           required
         />
-         {!isEmailValid && email && (
+       {!validation.isEmailValid && formData.email && (
           <Form.Text className="text-danger">Invalid email</Form.Text>
         )}
         {/* <Form.Text className="text-muted">
@@ -160,7 +182,7 @@ const Signin = () => {
           placeholder="Password"
           required
         />
-        {!isPasswordValid && password && (
+       {!validation.isPasswordValid && formData.password && (
           <Form.Text className="text-danger">
             Password must be at least 6 characters long
           </Form.Text>

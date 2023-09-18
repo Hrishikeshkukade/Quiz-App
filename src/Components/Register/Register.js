@@ -14,20 +14,34 @@ import styles from "./RegisterStyles";
 import constant from "../../config/Constant";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [name, setName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
+  // const [gender, setGender] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+  });
+
+  const [validation, setValidation] = useState({
+    isNameValid: true,
+    isEmailValid: true,
+    isPasswordValid: true,
+    isConfirmPasswordValid: true,
+  });
+
   const [error, setError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-  const [gender, setGender] = useState("");
 
-  const [isNameValid, setNameValid] = useState(true);
-  const [isEmailValid, setEmailValid] = useState(true);
-  const [isPasswordValid, setPasswordValid] = useState(true);
-  const [isConfirmPasswordValid, setConfirmPasswordValid] = useState(true);
+  // const [isNameValid, setNameValid] = useState(true);
+  // const [isEmailValid, setEmailValid] = useState(true);
+  // const [isPasswordValid, setPasswordValid] = useState(true);
+  // const [isConfirmPasswordValid, setConfirmPasswordValid] = useState(true);
 
   const navigate = useNavigate();
 
@@ -39,11 +53,17 @@ function Register() {
     }
   }, [navigate]);
 
-   // Debounce the name change handler
-  
-   const debouncedNameChangeHandler = debounce((newName) => {
-    setName(newName);
-    setNameValid(newName.trim() !== ""); // Basic validation
+  // Debounce the name change handler
+
+  const debouncedNameChangeHandler = debounce((newName) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      name: newName,
+    }));
+    setValidation((prevValidation) => ({
+      ...prevValidation,
+      isNameValid: newName.trim() !== "",
+    }));
   }, 1000);
   const nameChangeHandler = (e) => {
     const newName = e.target.value;
@@ -52,10 +72,16 @@ function Register() {
 
   // Debounce the email change handler
   const debouncedEmailChangeHandler = debounce((newEmail) => {
-    setEmail(newEmail);
+    setFormData((prevData) => ({
+      ...prevData,
+      email: newEmail,
+    }));
 
     const isValid = constant.emailConstant.test(newEmail);
-    setEmailValid(isValid);
+    setValidation((prevValidation) => ({
+      ...prevValidation,
+      isEmailValid: isValid,
+    }));
   }, 1000);
 
   const emailChangeHandler = (e) => {
@@ -65,8 +91,14 @@ function Register() {
 
   // Debounce the password change handler
   const debouncedPasswordChangeHandler = debounce((newPassword) => {
-    setPassword(newPassword);
-    setPasswordValid(newPassword.length >= 6);
+    setFormData((prevData) => ({
+      ...prevData,
+      password: newPassword,
+    }));
+    setValidation((prevValidation) => ({
+      ...prevValidation,
+      isPasswordValid: newPassword.length >= 6,
+    }));
   }, 1000);
 
   const passwordChangeHandler = (e) => {
@@ -77,8 +109,14 @@ function Register() {
   // Debounce the confirm password change handler
   const debouncedConfirmPasswordChangeHandler = debounce(
     (newConfirmPassword) => {
-      setConfirmPassword(newConfirmPassword);
-      setConfirmPasswordValid(newConfirmPassword === password);
+      setFormData((prevData) => ({
+        ...prevData,
+        confirmPassword: newConfirmPassword,
+      }));
+      setValidation((prevValidation) => ({
+        ...prevValidation,
+        isConfirmPasswordValid: newConfirmPassword === formData.password,
+      }));
     },
     1000
   );
@@ -95,10 +133,10 @@ function Register() {
   const signupHandler = async (e) => {
     e.preventDefault();
     if (
-      !isNameValid ||
-      !isEmailValid ||
-      !isPasswordValid ||
-      !isConfirmPasswordValid
+      !validation.isNameValid ||
+      !validation.isEmailValid ||
+      !validation.isPasswordValid ||
+      !validation.isConfirmPasswordValid
     ) {
       // Handle validation error, show a message, etc.
       return;
@@ -107,44 +145,37 @@ function Register() {
       setIsLoading(true);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password,
-       
-      )
+
+        formData.email,
+        formData.password
+      );
       await updateProfile(userCredential.user, {
-        displayName: name,
-        gender: gender,
-        
+        displayName: formData.name,
+        gender: formData.gender,
       });
       const user = userCredential.user;
-        
+
       // Use the generated UID
       const uid = user.uid;
 
       // Add user data to Firestore with the generated UID
       const docRef = await addDoc(collection(db, "users"), {
         uid: uid,
-        name: name,
-        email: email,
-        password: password,
-        gender: gender,
-        
-        
-      })
-      
-   
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        gender: formData.gender,
+      });
+
       console.log("User registered and document written with ID: ", docRef.id);
       navigate("/dashboard");
       sessionStorage.setItem("authenticated", "true");
     } catch (error) {
-    
       if (error.code === "auth/email-already-in-use") {
         setError("Email already exists");
-      } 
-      else if(error.code === "auth/network-request-failed"){
-        setError("Network problem,please try again later!")
-      }
-      else {
+      } else if (error.code === "auth/network-request-failed") {
+        setError("Network problem,please try again later!");
+      } else {
         setError(error.message);
       }
       setShowErrorModal(true);
@@ -159,24 +190,31 @@ function Register() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Name</Form.Label>
           <Form.Control
-            
             onChange={nameChangeHandler}
             type="text"
             placeholder="Enter Your Name"
             required
           />
-          {!isNameValid && name && (
+          {!validation.isNameValid && formData.name && (
             <Form.Text className="text-danger">Name is required</Form.Text>
           )}
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicGender">
-  <Form.Label>Gender</Form.Label>
-  <Form.Select value={gender} onChange={(e) => setGender(e.target.value)}>
-    <option value="">Select gender</option>
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-  </Form.Select>
-</Form.Group>
+          <Form.Label>Gender</Form.Label>
+          <Form.Select
+            value={formData.gender}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                gender: e.target.value,
+              }))
+            }
+          >
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </Form.Select>
+        </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
@@ -189,7 +227,7 @@ function Register() {
           {/* <Form.Text className="text-muted">
             We'll never share your email with anyone else.
           </Form.Text> */}
-          {!isEmailValid && email && (
+          {!validation.isEmailValid && formData.email && (
             <Form.Text className="text-danger">Invalid email</Form.Text>
           )}
         </Form.Group>
@@ -203,7 +241,7 @@ function Register() {
             required
           />
 
-          {!isPasswordValid && password && (
+          {!validation.isPasswordValid && formData.password && (
             <Form.Text className="text-danger">
               Password must be at least 6 characters long
             </Form.Text>
@@ -217,19 +255,15 @@ function Register() {
             placeholder="Confirm Password"
             required
           />
-          {!isConfirmPasswordValid && confirmPassword && (
+          {!validation.isConfirmPasswordValid && formData.confirmPassword && (
             <Form.Text className="text-danger">
               Passwords do not match
             </Form.Text>
           )}
         </Form.Group>
-    
+
         <Button disabled={isLoading} variant="primary" type="submit">
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            "Submit"
-          )}
+          {isLoading ? <Spinner /> : "Submit"}
         </Button>
         <ErrorModal
           show={showErrorModal}
