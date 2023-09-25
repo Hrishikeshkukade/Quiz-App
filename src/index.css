@@ -1,3 +1,33 @@
+/* :root{
+  --body_background: #f8f8f8;
+  --body_color: black;
+
+}  */
+
+/* [data-theme = "dark"] {
+  --body_background: #282c34;
+  --body_color: white;
+}  */
+/* mainContainer {
+  background-color: var(--background-color);
+  color: var(--text-color);
+} */
+
+/* Light Theme Colors */
+:root {
+  --background-color: #ffffff;
+  --text-color: #333333;
+}
+
+/* Dark Theme Colors */
+.darkTheme {
+  --background-color: #121212;
+  --text-color: #ffffff;
+}
+
+
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Nunito','Segoe UI', 'Roboto', 'Oxygen',
@@ -6,6 +36,8 @@ body {
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 code {

@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Rules from "../Rules";
 import notify from "../../config/Notify";
+// import { useTheme } from "../../context/ThemeContext";
 
 const Dashboard = () => {
   const [quizData, setQuizData] = useState([]);
@@ -27,12 +28,14 @@ const Dashboard = () => {
   // const [correctAnswers, setCorrectAnswers] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  // const { theme } = useTheme(); 
 
   const handleAcceptRules = () => {
     setShowRules(false); // Close the rules modal
     setStartQuiz(true); // Start the quiz
     setInitialTime(180);
     startTimer();
+    setShowConfirmationModal(false)
   };
 
   const startTimer = () => {
@@ -248,7 +251,7 @@ const Dashboard = () => {
                 </Button>
                 {/* {userMarks !== null && ( */}
                 {showConfirmationModal && (
-                  <Modal show={showConfirmationModal} onHide={hideConfirmation}>
+                  <Modal style={{color: "black"}} show={showConfirmationModal} onHide={hideConfirmation}>
                     <Modal.Header closeButton>
                       <Modal.Title>Confirm Submission</Modal.Title>
                     </Modal.Header>

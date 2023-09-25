@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import Profile from "./Components/Profile/Profile";
 import About from "./Components/About/About";
 import Reviews from "./Components/Reviews/Reviews";
+import Settings from "./Components/Settings/Settings";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -48,6 +50,7 @@ function App() {
     };
   }, []);
   return (
+   
     <Main>
       <NavBar />
       <Routes>
@@ -61,7 +64,10 @@ function App() {
           path="/profile"
           element={<ProtectedRoute element={<Profile />} />}
         /> : <Route exact path="/signin" element={<Signin />} />}
-        
+         {user ?  <Route
+          path="/settings"
+          element={<ProtectedRoute element={<Settings />} />}
+        /> : <Route exact path="/signin" element={<Signin />} />}
         {/* <Route exact path="/dashboard" element={<Dashboard />}/> */}
         <Route exact path="/fp" element={<ForgotPassword />} />
         <Route exact path="/about" element={<About />} />
@@ -76,6 +82,8 @@ function App() {
     //   </Route> */}
 
     // {/* <Button variant="dark">Primary</Button> */}
+    
+   
   );
 }
 

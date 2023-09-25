@@ -14,7 +14,7 @@ function ErrorModal({ show, onClose, errorMessage }) {
     }
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal  show={show} onHide={onClose}>
       <Modal.Header closeButton>
         <Modal.Title style={styles.error} >Error</Modal.Title>
       </Modal.Header>

@@ -1,0 +1,11 @@
+/* Light Theme Colors */
+:root {
+  --background-color: #ffffff;
+  --text-color: #333333;
+}
+
+/* Dark Theme Colors */
+.darkTheme {
+  --background-color: #121212;
+  --text-color: #ffffff;
+}

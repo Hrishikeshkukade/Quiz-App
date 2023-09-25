@@ -7,7 +7,7 @@ import styles from "./HomeStyle";
 
 const Home = () => {
   return (
-    <>
+    <div className={classes.mainContainer}>
       <div className={classes.container}>
         <h1>Quiz</h1>
       </div>
@@ -36,7 +36,7 @@ const Home = () => {
           Know more
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

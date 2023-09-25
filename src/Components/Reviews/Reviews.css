@@ -1,11 +1,23 @@
 /* Reviews.css */
 
 /* Style the outer container */
+.modalClass{
+  background-color: #121212;
+  color: black;
+}
+.dark-modal {
+  background-color: black;
+  color: white; /* Set text color to white or any suitable color for dark theme */
+}
 .review-container {
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
     padding: 20px;
     border-radius: 10px;
     
+  }
+  .darkTheme {
+    background-color: #121212; /* Change the background color for dark theme */
+    color: #ffffff; /* Change the text color for dark theme */
   }
   .review-container h2{
     justify-content: center;
@@ -39,8 +51,8 @@
   /* Style the "Give Review" button */
   .review-button {
     display: flex;
-    background-color: #007bff;
-    color: #fff;
+    /* background-color: #007bff;
+    color: #fff; */
     border: none;
     border-radius: 5px;
     padding: 10px 20px;

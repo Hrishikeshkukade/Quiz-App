@@ -1,13 +1,13 @@
 /* About.css */
 .about-section {
     padding: 60px 0;
-    background-color: #f8f8f8;
+    /* background-color: #f8f8f8; */
   }
   
   .about-content {
     padding: 30px;
     border: 1px solid #ddd;
-    background-color: #fff;
+    /* background-color: #fff; */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin-bottom: 30px;
     transition: transform 0.3s ease-in-out;

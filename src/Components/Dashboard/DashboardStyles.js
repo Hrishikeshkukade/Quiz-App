@@ -1,4 +1,7 @@
 const styles = {
+  modal:{
+    color: "black",
+  },
     button1: {
       marginLeft: "37%",
       justifyContent: "center",
@@ -18,7 +21,16 @@ const styles = {
       border: "none", /* Remove border */
       borderRadius: "5px", /* Add border-radius */
       textAlign: "center",
-    }
+    },
+    // lightTheme: {
+    //   backgroundColor: "#ffffff",
+    //   color: "#000000",
+    // },
+    
+    // darkTheme: {
+    //   backgroundColor: "#333333",
+    //   color: "#ffffff",
+    // }
   };
 
 export default styles;

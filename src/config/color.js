@@ -1,0 +1,3 @@
+const lightThemeColors = {
+    primaryColor: "#ffffff",
+}

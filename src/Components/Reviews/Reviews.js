@@ -7,6 +7,7 @@ import { collection } from "firebase/firestore";
 import "./Reviews.css";
 import LoadingSpinner from "../../UI/Spinner";
 import debounce from "lodash/debounce";
+import { useTheme } from "../../context/ThemeContext";
 
 
 
@@ -25,6 +26,8 @@ const Reviews = () => {
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
   const handleCloseThanksModal = () => setShowThanksModal(false);
+
+  const theme = useTheme();
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
@@ -90,7 +93,7 @@ const Reviews = () => {
         setIsLoading(false);
       } catch (error) {
         if (error) {
-          return <p>Something went wrong</p>;
+          return (<p>Something went wrong</p>);
         }
         setIsLoading(false);
       }
@@ -100,7 +103,7 @@ const Reviews = () => {
   }, []);
 
   return (
-    <div className="review-container">
+    <div className={`review-container ${theme === "dark" ? "darkTheme" : ""}`}>
       <div className="reviews">
         <h2>Reviews</h2>
         <Button variant="success" onClick={handleShowModal}>
@@ -123,7 +126,10 @@ const Reviews = () => {
       </ul>
 
       {/* Modal for giving a review */}
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal style={{color: "black"  }} show={showModal} onHide={handleCloseModal}>
+        
+
+        
         <Modal.Header closeButton>
           <Modal.Title>Give Review</Modal.Title>
         </Modal.Header>
@@ -176,6 +182,7 @@ const Reviews = () => {
             </Modal.Footer>
           </Form>
         </Modal.Body>
+      
       </Modal>
       <Modal show={showThanksModal} onHide={handleCloseThanksModal}>
         <Modal.Header closeButton>
@@ -189,6 +196,7 @@ const Reviews = () => {
             Close
           </Button>
         </Modal.Footer>
+        
       </Modal>
     </div>
   );

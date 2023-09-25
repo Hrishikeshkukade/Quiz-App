@@ -12,6 +12,7 @@ import Spinner from "../../UI/Spinner";
 import debounce from "lodash/debounce";
 import styles from "./RegisterStyles";
 import constant from "../../config/Constant";
+import { useTheme } from "../../context/ThemeContext";
 
 function Register() {
   // const [name, setName] = useState("");
@@ -19,6 +20,7 @@ function Register() {
   // const [password, setPassword] = useState("");
   // const [confirmPassword, setConfirmPassword] = useState("");
   // const [gender, setGender] = useState("");
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,6 +35,8 @@ function Register() {
     isPasswordValid: true,
     isConfirmPasswordValid: true,
   });
+
+  const theme = useTheme();
 
   const [error, setError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -184,6 +188,8 @@ function Register() {
     }
   };
 
+   
+
   return (
     <React.Fragment>
       <Form onSubmit={signupHandler} className={classes.formContainer}>
@@ -194,6 +200,9 @@ function Register() {
             type="text"
             placeholder="Enter Your Name"
             required
+            className={`${
+              theme === "dark" ? "darkInput" : ""
+            }`}
           />
           {!validation.isNameValid && formData.name && (
             <Form.Text className="text-danger">Name is required</Form.Text>

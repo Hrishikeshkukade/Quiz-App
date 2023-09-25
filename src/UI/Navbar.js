@@ -6,11 +6,13 @@ import {
   Dropdown,
   Modal,
   Button,
+
 } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 // import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase";
+import DarkTheme from "../Components/DarkTheme/DarkTheme";
 
 // import {BrowserRouter as Router, NavLink} from "react-router-dom";
 
@@ -122,6 +124,9 @@ const NavBar = () => {
                   <Dropdown.Item as={NavLink} to="/profile">
                     Profile
                   </Dropdown.Item>
+                  <Dropdown.Item as={NavLink} to="/settings">
+                    Settings
+                  </Dropdown.Item>
                   {/* <Dropdown.Item href="#settings">Settings</Dropdown.Item> */}
                   <Dropdown.Item onClick={logoutModalHandler}>
                     Logout
@@ -145,12 +150,22 @@ const NavBar = () => {
                 <Nav.Link as={NavLink} to="/reviews">
                   Reviews
                 </Nav.Link>
-              </>
+             
+              
+                 
+               
+                   <DarkTheme />
+               
+             
+              
+               </>
             )}
+           
           </Nav>
+        
         </Navbar.Collapse>
         {showLogoutModal && (
-          <Modal show={showLogoutModal} onHide={hideLogoutModal}>
+          <Modal style={{color: "black"}} show={showLogoutModal} onHide={hideLogoutModal}>
             <Modal.Header closeButton>
               <Modal.Title>Confirm Logout</Modal.Title>
             </Modal.Header>

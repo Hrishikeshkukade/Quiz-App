@@ -39,3 +39,32 @@
 .App{
   font-family: "Nunito", sans-serif;
 }
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+/* Light Theme Colors */
+:root {
+  --background-color: #ffffff;
+  --text-color: #333333;
+}
+
+/* Dark Theme Colors */
+.darkTheme {
+  --background-color: #121212;
+  --text-color: #ffffff;
+}
+
+/* Apply the theme styles to the entire page */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  /* Additional global styles for the body */
+}
+
