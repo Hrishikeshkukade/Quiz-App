@@ -53,12 +53,18 @@
 :root {
   --background-color: #ffffff;
   --text-color: #333333;
+  --error-color: red;
+
 }
 
 /* Dark Theme Colors */
 .darkTheme {
   --background-color: #121212;
+  --input-backgroundcolor: #323232;
   --text-color: #ffffff;
+  --error-color: red;
+  --input-textcolor: #ffffff;
+  --placeholder-color: red;
 }
 
 /* Apply the theme styles to the entire page */

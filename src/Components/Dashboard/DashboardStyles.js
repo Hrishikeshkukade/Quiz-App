@@ -1,7 +1,7 @@
 const styles = {
-  modal:{
-    color: "black",
-  },
+  // modal:{
+  //   color: "black",
+  // },
     button1: {
       marginLeft: "37%",
       justifyContent: "center",
@@ -21,6 +21,10 @@ const styles = {
       border: "none", /* Remove border */
       borderRadius: "5px", /* Add border-radius */
       textAlign: "center",
+    },
+    card:{
+      backgroundColor: "var(--background-color)",
+      color: "var(--text-color)"
     },
     // lightTheme: {
     //   backgroundColor: "#ffffff",

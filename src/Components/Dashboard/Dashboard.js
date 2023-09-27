@@ -10,7 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Rules from "../Rules";
 import notify from "../../config/Notify";
-// import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const Dashboard = () => {
   const [quizData, setQuizData] = useState([]);
@@ -28,7 +28,7 @@ const Dashboard = () => {
   // const [correctAnswers, setCorrectAnswers] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  // const { theme } = useTheme(); 
+  const { theme } = useTheme(); 
 
   const handleAcceptRules = () => {
     setShowRules(false); // Close the rules modal
@@ -88,7 +88,7 @@ const Dashboard = () => {
   const fetchApiData = async () => {
     try {
       const res = await fetch(
-        "https://opentdb.com/api.php?amount=6&category=9&difficulty=easy"
+        "https://opentdb.com/api.php?amount=6&category=18&difficulty=medium"
       );
       const data = await res.json();
       const quizQuestions = data.results.map((question) => {
@@ -215,14 +215,15 @@ const Dashboard = () => {
                   )}
                 </div>
                 {quizData.map((question, questionIndex) => (
-                  <Card key={questionIndex} className="mt-3">
+                  <Card style={styles.card}  key={questionIndex} className="mt-3">
                     <Card.Body>
                       <Card.Title>Question {questionIndex + 1}</Card.Title>
                       <Card.Text>{question.question}</Card.Text>
-                      <ul className="list-group">
+                      <ul  className="list-group">
                         {question.incorrect_answers.map(
                           (option, optionIndex) => (
                             <li
+                            style={styles.card}
                               key={optionIndex}
                               className={
                                 userResponses[questionIndex] === option
@@ -251,7 +252,7 @@ const Dashboard = () => {
                 </Button>
                 {/* {userMarks !== null && ( */}
                 {showConfirmationModal && (
-                  <Modal style={{color: "black"}} show={showConfirmationModal} onHide={hideConfirmation}>
+                  <Modal style={{color: "black"}}  show={showConfirmationModal} onHide={hideConfirmation}>
                     <Modal.Header closeButton>
                       <Modal.Title>Confirm Submission</Modal.Title>
                     </Modal.Header>

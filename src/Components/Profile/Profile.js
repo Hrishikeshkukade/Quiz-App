@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Spinner } from "react-bootstrap";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { collection, where, getDocs, query, orderBy } from "firebase/firestore";
@@ -7,6 +7,7 @@ import { jsPDF } from "jspdf";
 import classes from "./Profile.module.css";
 import notify from "../../config/Notify";
 import { ToastContainer } from "react-toastify";
+import { useTheme } from "../../context/ThemeContext";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -17,9 +18,11 @@ const Profile = () => {
   const [questions, setQuestions] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState([]);
   const [userRank, setUserRank] = useState(null);
+  const theme = useTheme();
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const userName = user.displayName;
         const userEmail = user.email;
@@ -27,14 +30,21 @@ const Profile = () => {
         setName(userName);
         setEmail(userEmail);
         setUid(uid);
-
+  
         // Fetch user data when authentication changes
         fetchUserData(uid);
       }
     });
-  });
+  
+    // Cleanup the listener when the component unmounts
+    return () => {
+      unsubscribe();
+    };
+  }, []); // Empty dependency array to run this effect only once
+  
 
   const fetchUserData = async () => {
+    setIsLoading(true);
     try {
       // Query the Firestore collection for user data
       const userQuery = query(
@@ -76,6 +86,8 @@ const Profile = () => {
     } catch (error) {
       console.error("Error fetching user data: ", error);
       notify("Error fetching previous quiz marks", true);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -109,21 +121,21 @@ const Profile = () => {
 
   return (
     <>
-      <Card border="warning" className={classes.container}>
+      <Card  border="warning" className={classes.container}>
         <Card.Body>
           <Card.Title>Name</Card.Title>
           <Card.Text>{name}</Card.Text>
           <Card.Title>Email</Card.Title>
           <Card.Text>{email}</Card.Text>
-          {userRank !== null && (
+          {/* {userRank !== null && (
             <>
               <Card.Title>Your Rank</Card.Title>
               <Card.Text>Rank: {userRank}</Card.Text>
             </>
-          )}
+          )} */}
           <Card.Title>Previous Quiz Marks</Card.Title>
           <Card.Text>
-            {previousQuizMarks.length === 0 ? (
+          { previousQuizMarks.length === 0 ? (
               <p>No quiz attended</p>
             ) : (
               <ul>
@@ -154,7 +166,7 @@ const Profile = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme={theme === "dark" ? "dark" : "light"}
       />
     </>
   );

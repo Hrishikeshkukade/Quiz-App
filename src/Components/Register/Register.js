@@ -200,9 +200,7 @@ function Register() {
             type="text"
             placeholder="Enter Your Name"
             required
-            className={`${
-              theme === "dark" ? "darkInput" : ""
-            }`}
+            className={classes.darkInput}
           />
           {!validation.isNameValid && formData.name && (
             <Form.Text className="text-danger">Name is required</Form.Text>
@@ -218,6 +216,7 @@ function Register() {
                 gender: e.target.value,
               }))
             }
+            className={classes.darkInput}
           >
             <option value="">Select gender</option>
             <option value="male">Male</option>
@@ -232,6 +231,7 @@ function Register() {
             type="email"
             placeholder="Enter email"
             required
+            className={classes.darkInput}
           />
           {/* <Form.Text className="text-muted">
             We'll never share your email with anyone else.
@@ -248,6 +248,7 @@ function Register() {
             type="password"
             placeholder="Password"
             required
+            className={classes.darkInput}
           />
 
           {!validation.isPasswordValid && formData.password && (
@@ -263,6 +264,7 @@ function Register() {
             type="password"
             placeholder="Confirm Password"
             required
+            className={classes.darkInput}
           />
           {!validation.isConfirmPasswordValid && formData.confirmPassword && (
             <Form.Text className="text-danger">

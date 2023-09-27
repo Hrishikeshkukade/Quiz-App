@@ -10,6 +10,15 @@
     text-align: right;
     padding: 20px;
   }
+  .darkInput {
+    background-color: var(--input-backgroundcolor) !important;
+    color: var(--input-textcolor) !important;
+  }
+  
+  .darkInput::placeholder {
+    color: #ccc !important; /* Replace with your desired placeholder text color */
+  }
+  
   
   @media (max-width: 504px){
     .formContainer{

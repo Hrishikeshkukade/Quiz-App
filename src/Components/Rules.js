@@ -1,9 +1,15 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
+import { useTheme } from "../context/ThemeContext";
 
 const Rules = ({ show, onHide, onAccept }) => {
+  const theme = useTheme();
+
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal style={{
+      backgroundColor: theme === "dark" ? "#333 " : "", // Set the background color based on the theme
+      color: theme === "dark" ? "white" : "black", // Set the text color based on the theme
+    }} show={show} onHide={onHide}>
       <Modal.Header closeButton>
         <Modal.Title>Quiz Rules</Modal.Title>
       </Modal.Header>

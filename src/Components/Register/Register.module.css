@@ -1,13 +1,13 @@
-.checkbox{
-    .custom-checkbox input[type="checkbox"] + .form-check-label::before {
-        border: 2px solid #007bff; /* Change the color as needed */
-        background-color: #11569e; /* Change the background color as needed */
-      }
-      
-      .custom-checkbox input[type="checkbox"]:checked + .form-check-label::before {
-        background-color: #007bff; /* Change the color for checked state */
-        border-color: #007bff; /* Change the border color for checked state */
-      }
+.checkbox {
+  .custom-checkbox input[type="checkbox"] + .form-check-label::before {
+    border: 2px solid #007bff; /* Change the color as needed */
+    background-color: #11569e; /* Change the background color as needed */
+  }
+
+  .custom-checkbox input[type="checkbox"]:checked + .form-check-label::before {
+    background-color: #007bff; /* Change the color for checked state */
+    border-color: #007bff; /* Change the border color for checked state */
+  }
 }
 .formContainer {
   display: flex;
@@ -17,41 +17,40 @@
   margin-left: 32%;
   margin-top: 5%;
 }
+
 .darkInput {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--input-backgroundcolor) !important;
+  color: var(--input-textcolor) !important;
 }
 
-@media (max-width: 504px){
-  .formContainer{
-   width: 60%;
-   margin-right: 20%;
-   margin-left: 22%;
-  }
-  
-}
-@media (max-width: 412px){
-  .formContainer{
-   width: 50%;
-  margin-left: 25%;
-    
-  }
-  
+.darkInput::placeholder {
+  color: #ccc !important; /* Replace with your desired placeholder text color */
 }
 
-@media (max-width: 280px){
-  .formContainer{
-   width: 70%;
-  margin-left: 15%;
-    
+@media (max-width: 504px) {
+  .formContainer {
+    width: 60%;
+    margin-right: 20%;
+    margin-left: 22%;
   }
-  
 }
-@media (max-width: 393px){
-  .formContainer{
-   width: 70%;
-   margin-right: 32%;
-   margin-left: 17%;
+@media (max-width: 412px) {
+  .formContainer {
+    width: 50%;
+    margin-left: 25%;
   }
-  
+}
+
+@media (max-width: 280px) {
+  .formContainer {
+    width: 70%;
+    margin-left: 15%;
+  }
+}
+@media (max-width: 393px) {
+  .formContainer {
+    width: 70%;
+    margin-right: 32%;
+    margin-left: 17%;
+  }
 }

@@ -2,8 +2,8 @@
 
 /* Style the outer container */
 .modalClass{
-  background-color: #121212;
-  color: black;
+  color: var(--text-color);
+  background-color: var(--body_background);
 }
 .dark-modal {
   background-color: black;

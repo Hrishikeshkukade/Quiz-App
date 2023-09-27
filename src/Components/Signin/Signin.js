@@ -164,6 +164,7 @@ const Signin = () => {
           type="email"
           placeholder="Enter email"
           required
+          className={classes.darkInput}
         />
        {!validation.isEmailValid && formData.email && (
           <Form.Text className="text-danger">Invalid email</Form.Text>
@@ -181,6 +182,7 @@ const Signin = () => {
           type="password"
           placeholder="Password"
           required
+          className={classes.darkInput}
         />
        {!validation.isPasswordValid && formData.password && (
           <Form.Text className="text-danger">
