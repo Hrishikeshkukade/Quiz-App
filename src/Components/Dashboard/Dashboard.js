@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Modal } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { Modal } from "react-bootstrap";
 import styles from "./DashboardStyles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Rules from "../Rules";
 import notify from "../../config/Notify";
 import { useTheme } from "../../context/ThemeContext";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const [quizData, setQuizData] = useState([]);
@@ -252,7 +252,10 @@ const Dashboard = () => {
                 </Button>
                 {/* {userMarks !== null && ( */}
                 {showConfirmationModal && (
-                  <Modal style={{color: "black"}}  show={showConfirmationModal} onHide={hideConfirmation}>
+                  <Modal  show={showConfirmationModal} onHide={hideConfirmation}>
+                    <div style={styles.darkModal}>
+
+                   
                     <Modal.Header closeButton>
                       <Modal.Title>Confirm Submission</Modal.Title>
                     </Modal.Header>
@@ -267,6 +270,7 @@ const Dashboard = () => {
                         Yes, Submit
                       </Button>
                     </Modal.Footer>
+                    </div>
                   </Modal>
                 )}
               </div>

@@ -26,6 +26,12 @@ const NavBar = () => {
       alignItems: "center",
       justifyContent: "center",
     },
+    darkModal: {
+      backgroundColor: "var(--background-color)",
+      color: "var(--text-color)",
+      borderRadius: "5px",
+      /* Add any other dark theme styles you need for the modal */
+    }
   };
 
   const [authenticatedUser, setAuthenticatedUser] = useState(auth.currentUser);
@@ -166,6 +172,9 @@ const NavBar = () => {
         </Navbar.Collapse>
         {showLogoutModal && (
           <Modal style={{color: "black"}} show={showLogoutModal} onHide={hideLogoutModal}>
+            <div style={styles.darkModal}>
+
+       
             <Modal.Header closeButton>
               <Modal.Title>Confirm Logout</Modal.Title>
             </Modal.Header>
@@ -178,6 +187,7 @@ const NavBar = () => {
                 Logout
               </Button>
             </Modal.Footer>
+            </div>
           </Modal>
         )}
       </Container>

@@ -18,7 +18,7 @@
   .darkInput::placeholder {
     color: #ccc !important; /* Replace with your desired placeholder text color */
   }
-  
+ 
   
   @media (max-width: 504px){
     .formContainer{

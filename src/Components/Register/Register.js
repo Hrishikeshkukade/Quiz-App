@@ -7,7 +7,7 @@ import { updateProfile } from "firebase/auth";
 import { auth } from "../../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase";
-import ErrorModal from "../../UI/Modal";
+import ErrorModal from "../../UI/ErrorModal";
 import Spinner from "../../UI/Spinner";
 import debounce from "lodash/debounce";
 import styles from "./RegisterStyles";
@@ -196,6 +196,7 @@ function Register() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Name</Form.Label>
           <Form.Control
+          
             onChange={nameChangeHandler}
             type="text"
             placeholder="Enter Your Name"

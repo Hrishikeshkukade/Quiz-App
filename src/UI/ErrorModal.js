@@ -10,6 +10,7 @@ function ErrorModal({ show, onClose, errorMessage }) {
     const styles = {
         modal:{
           backgroundColor: "var(--background-color)",
+          borderRadius: "5px"
         },
         error: {
             color: "var(--error-color)",

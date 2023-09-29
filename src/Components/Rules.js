@@ -1,15 +1,23 @@
 import React from "react";
-import { Modal, Button } from "react-bootstrap";
-import { useTheme } from "../context/ThemeContext";
+import {  Button, Modal } from "react-bootstrap";
+
+
 
 const Rules = ({ show, onHide, onAccept }) => {
-  const theme = useTheme();
+  const styles ={
+    darkModal: {
+      backgroundColor: "var(--background-color)",
+      color: "var(--text-color)",
+      borderRadius: "5px",
+      /* Add any other dark theme styles you need for the modal */
+    }
+  }
 
   return (
-    <Modal style={{
-      backgroundColor: theme === "dark" ? "#333 " : "", // Set the background color based on the theme
-      color: theme === "dark" ? "white" : "black", // Set the text color based on the theme
-    }} show={show} onHide={onHide}>
+    <Modal  show={show} onHide={onHide}>
+      <div style={styles.darkModal}>
+
+   
       <Modal.Header closeButton>
         <Modal.Title>Quiz Rules</Modal.Title>
       </Modal.Header>
@@ -29,6 +37,7 @@ const Rules = ({ show, onHide, onAccept }) => {
           Accept Rules
         </Button>
       </Modal.Footer>
+      </div>
     </Modal>
   );
 };

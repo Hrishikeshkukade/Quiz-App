@@ -12,7 +12,7 @@ import {
   getRedirectResult,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import ErrorModal from "../../UI/Modal";
+import ErrorModal from "../../UI/ErrorModal";
 import Spinner from "../../UI/Spinner";
 import classes from "./Signin.module.css";
 
@@ -101,7 +101,11 @@ const Signin = () => {
         setError("Email is not valid");
       } else if (error.code === "auth/user-not-found") {
         setError("User is not registered");
-      } else if (error.code === "auth/network-request-failed") {
+      } else if (error.code === "auth/wrong-password") {
+        setError("Wrong password");
+      }else if (error.code === "auth/missing-password") {
+        setError("Wrong password");
+      }else if (error.code === "auth/network-request-failed") {
         setError("Network problem,please try again later!");
       } else {
         setError(error.message);

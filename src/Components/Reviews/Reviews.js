@@ -126,9 +126,10 @@ const Reviews = () => {
       </ul>
 
       {/* Modal for giving a review */}
-      <Modal style={{color: "black"  }} show={showModal} onHide={handleCloseModal}>
+      <Modal    show={showModal} onHide={handleCloseModal}>
         
-
+         <div className="darkModal">
+         
         
         <Modal.Header closeButton>
           <Modal.Title>Give Review</Modal.Title>
@@ -142,15 +143,17 @@ const Reviews = () => {
                 value={name}
                 onChange={handleNameChange}
                 required
+                className="darkInput"
               />
             </Form.Group>
             <Form.Group>
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
-               
+                className="darkInput"
                 onChange={emailChangeHandler}
                 required
+
               />
                {!isEmailValid && email && (
           <Form.Text className="text-danger">Invalid email</Form.Text>
@@ -170,6 +173,7 @@ const Reviews = () => {
                 value={reviewText}
                 onChange={handleReviewTextChange}
                 required
+                className="darkInput"
               />
             </Form.Group>
             <Modal.Footer>
@@ -182,7 +186,7 @@ const Reviews = () => {
             </Modal.Footer>
           </Form>
         </Modal.Body>
-      
+        </div> 
       </Modal>
       <Modal show={showThanksModal} onHide={handleCloseThanksModal}>
         <Modal.Header closeButton>

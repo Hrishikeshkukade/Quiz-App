@@ -1,0 +1,6 @@
+/* Override the mild green color for selected options */
+.list-group-item-success {
+    background-color: #343a40 !important; /* Replace 'dark-color' with your desired dark color */
+    color: white !important; /* Set the text color to white or any other color that contrasts with your dark background */
+  }
+  

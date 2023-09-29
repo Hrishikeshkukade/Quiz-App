@@ -121,7 +121,7 @@ const Profile = () => {
 
   return (
     <>
-      <Card  border="warning" className={classes.container}>
+      <Card  className={classes.container}>
         <Card.Body>
           <Card.Title>Name</Card.Title>
           <Card.Text>{name}</Card.Text>
