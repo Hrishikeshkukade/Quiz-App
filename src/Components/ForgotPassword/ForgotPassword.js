@@ -3,8 +3,10 @@ import { Form, Button } from "react-bootstrap";
 import { auth } from "../../firebase";
 // import { updatePassword, get } from "firebase/auth";
 import { sendPasswordResetEmail } from "firebase/auth";
-import Spinner from "../../UI/Spinner";
-import styles from "./ForgotPasswordStyles";
+import LoadingSpinner from "../../UI/Spinner";
+import "./ForgotPassword.css"
+import notify from "../../config/Notify";
+import { ToastContainer } from "react-toastify";
 
 const ForgotPassword = () => {
   
@@ -30,19 +32,23 @@ const ForgotPassword = () => {
         .then(() => {
           // Password reset email sent!
           // ..
+          notify("Password reset email sent!", false)
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           // ..
-        });
-        setIsLoading(false);
+        }).finally(() => {
+          setIsLoading(false)
+        })
+      
       }
      
 
 
     return(
-        <Form onSubmit={updatePasswordHandler} style={styles.formContainer}>
+      <>
+        <Form onSubmit={updatePasswordHandler} className="formContainer">
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control
@@ -52,13 +58,26 @@ const ForgotPassword = () => {
             placeholder="Enter email"
             required
           />
-        
+             
          
           </Form.Group>
           <Button disabled={isLoading} variant="primary" type="submit">
-        {isLoading ? <Spinner /> : "Submit"}
+        {isLoading ? <LoadingSpinner /> : "Submit"}
       </Button>
           </Form>
+           <ToastContainer
+           position="top-center"
+           autoClose={5000}
+           hideProgressBar={false}
+           newestOnTop={false}
+           closeOnClick
+           rtl={false}
+           pauseOnFocusLoss
+           draggable
+           pauseOnHover
+           theme="light"
+         />
+         </>
     );
 };
 
