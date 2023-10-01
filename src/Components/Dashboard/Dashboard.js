@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
@@ -9,8 +9,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Rules from "../Rules";
 import notify from "../../config/Notify";
-import { useTheme } from "../../context/ThemeContext";
+
 import "./Dashboard.css";
+import ConfirmationModal from "../../UI/ConfirmationModal/ConfirmationModal";
+import Timer from "../Timer/Timer";
+import QuizQuestions from "../QuizQuestions/QuizQuestions";
 
 const Dashboard = () => {
   const [quizData, setQuizData] = useState([]);
@@ -28,33 +31,16 @@ const Dashboard = () => {
   // const [correctAnswers, setCorrectAnswers] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme } = useTheme(); 
+  
 
   const handleAcceptRules = () => {
     setShowRules(false); // Close the rules modal
     setStartQuiz(true); // Start the quiz
     setInitialTime(180);
-    startTimer();
-    setShowConfirmationModal(false)
+
+    setShowConfirmationModal(false);
   };
 
-  const startTimer = () => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => prevTime - 1);
-    }, 1000);
-
-    setTimeout(() => {
-      if (startQuiz) {
-        clearInterval(timer);
-        handleSubmit(); // Automatically submit the quiz when time is up
-      }
-    }, initialTime * 1000); // 3 minutes in milliseconds
-    setTimerInterval(timer);
-  };
-  const stopTimer = () => {
-    clearInterval(timerInterval); // Clear the interval to stop the timer
-    setTimeLeft(initialTime);
-  };
   const startQuizHandler = () => {
     setShowRules(true);
   };
@@ -124,7 +110,7 @@ const Dashboard = () => {
   };
   const hideConfirmation = () => {
     setShowConfirmationModal(false);
-  }
+  };
 
   const handleSubmit = async () => {
     // Calculate user marks
@@ -142,7 +128,6 @@ const Dashboard = () => {
     setUserMarks(marks);
     setStartQuiz(false);
     setTimeLeft(initialTime);
-    stopTimer();
 
     // Prepare user data to submit
 
@@ -167,6 +152,10 @@ const Dashboard = () => {
       notify("An error occurred while submitting user data", true);
       // showErrorToast("An error occurred while submitting user data");
     }
+  };
+
+  const handleTimeUp = () => {
+    handleSubmit(); // Automatically submit the quiz when time is up
   };
 
   return (
@@ -201,83 +190,35 @@ const Dashboard = () => {
           </Button>
         ) : (
           <div>
-            {quizData.length === 0 ? (
-              <p>Loading questions...</p>
-            ) : (
-              <div>
-                <div className="sticky-top" style={{ top: "0", zIndex: "100" }}>
-                  {startQuiz && (
-                    <div style={styles.button2}>
-                      <p style={styles.timeDisplay}>
-                        Time Left: {timeLeft} seconds
-                      </p>
-                    </div>
-                  )}
-                </div>
-                {quizData.map((question, questionIndex) => (
-                  <Card style={styles.card}  key={questionIndex} className="mt-3">
-                    <Card.Body>
-                      <Card.Title>Question {questionIndex + 1}</Card.Title>
-                      <Card.Text>{question.question}</Card.Text>
-                      <ul  className="list-group">
-                        {question.incorrect_answers.map(
-                          (option, optionIndex) => (
-                            <li
-                            style={styles.card}
-                              key={optionIndex}
-                              className={
-                                userResponses[questionIndex] === option
-                                  ? "list-group-item list-group-item-success"
-                                  : "list-group-item"
-                              }
-                              onClick={() =>
-                                handleOptionClick(questionIndex, option)
-                              }
-                            >
-                              {option}
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </Card.Body>
-                  </Card>
-                ))}
-                <Button
-                  variant="success"
-                  className="mt-3"
-                  style={styles.button1}
-                  onClick={handleConfirmation}
-                >
-                  Submit
-                </Button>
-                {/* {userMarks !== null && ( */}
-                {showConfirmationModal && (
-                  <Modal  show={showConfirmationModal} onHide={hideConfirmation}>
-                    <div style={styles.darkModal}>
+            <div className="sticky-top" style={{ top: "0", zIndex: "100" }}>
+              {startQuiz && (
+                <Timer
+                  initialTime={initialTime}
+                  startQuiz={startQuiz}
+                  onTimeUp={handleTimeUp}
+                />
+              )}
+            </div>
+            <QuizQuestions
+              quizData={quizData}
+              userResponses={userResponses}
+              handleOptionClick={handleOptionClick}
+              onClick={handleConfirmation}
+            />
 
-                   
-                    <Modal.Header closeButton>
-                      <Modal.Title>Confirm Submission</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      Are you sure you want to submit the quiz?
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={hideConfirmation}>
-                        Cancel
-                      </Button>
-                      <Button variant="primary" onClick={handleSubmit}>
-                        Yes, Submit
-                      </Button>
-                    </Modal.Footer>
-                    </div>
-                  </Modal>
-                )}
-              </div>
+            {/* {userMarks !== null && ( */}
+            {showConfirmationModal && (
+              <ConfirmationModal
+                show={showConfirmationModal}
+                onHide={hideConfirmation}
+                onConfirm={handleSubmit}
+                style={styles.darkModal}
+              />
             )}
           </div>
         )}
       </div>
+
       {/* {startQuiz ?  <div style={styles.button2}>
         <p>Time Left: {timeLeft} seconds</p>
       </div> : null} */}
