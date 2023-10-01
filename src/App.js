@@ -74,14 +74,7 @@ function App() {
         <Route exact path="/reviews" element={<Reviews />} />
       </Routes>
     </Main>
-    // {/* <Route path="/" exact>
-    //     <Home />
-    //   </Route>
-    //   <Route path="/register">
-    //     <Register />
-    //   </Route> */}
-
-    // {/* <Button variant="dark">Primary</Button> */}
+   
     
    
   );

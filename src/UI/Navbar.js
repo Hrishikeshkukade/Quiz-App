@@ -6,7 +6,6 @@ import {
   Dropdown,
   Modal,
   Button,
-
 } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 // import { auth } from "../firebase";
@@ -31,7 +30,7 @@ const NavBar = () => {
       color: "var(--text-color)",
       borderRadius: "5px",
       /* Add any other dark theme styles you need for the modal */
-    }
+    },
   };
 
   const [authenticatedUser, setAuthenticatedUser] = useState(auth.currentUser);
@@ -79,7 +78,7 @@ const NavBar = () => {
         console.log(error);
         // An error happened.
       });
-      setShowLogoutModal(false)
+    setShowLogoutModal(false);
   };
   // const imageSource = authenticatedUser && gender === "male" ?
   // `/Boy.jpg` :
@@ -156,37 +155,30 @@ const NavBar = () => {
                 <Nav.Link as={NavLink} to="/reviews">
                   Reviews
                 </Nav.Link>
-             
-              
-                 
-               
-                   <DarkTheme />
-               
-             
-              
-               </>
+                <DarkTheme />
+              </>
             )}
-           
           </Nav>
-        
         </Navbar.Collapse>
         {showLogoutModal && (
-          <Modal style={{color: "black"}} show={showLogoutModal} onHide={hideLogoutModal}>
+          <Modal
+            style={{ color: "black" }}
+            show={showLogoutModal}
+            onHide={hideLogoutModal}
+          >
             <div style={styles.darkModal}>
-
-       
-            <Modal.Header closeButton>
-              <Modal.Title>Confirm Logout</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Are you sure you want to Logout?</Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={hideLogoutModal}>
-                Cancel
-              </Button>
-              <Button variant="danger" onClick={logoutHandler}>
-                Logout
-              </Button>
-            </Modal.Footer>
+              <Modal.Header closeButton>
+                <Modal.Title>Confirm Logout</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>Are you sure you want to Logout?</Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={hideLogoutModal}>
+                  Cancel
+                </Button>
+                <Button variant="danger" onClick={logoutHandler}>
+                  Logout
+                </Button>
+              </Modal.Footer>
             </div>
           </Modal>
         )}
