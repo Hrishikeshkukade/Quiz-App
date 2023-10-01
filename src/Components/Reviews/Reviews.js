@@ -5,7 +5,7 @@ import StarRating from "../StarRating/StarRating";
 import { addDoc, getDocs } from "firebase/firestore";
 import { collection } from "firebase/firestore";
 import "./Reviews.css";
-import LoadingSpinner from "../../UI/Spinner";
+
 import debounce from "lodash/debounce";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -73,7 +73,9 @@ const Reviews = () => {
     setIsButtonLoading(false);
     setShowModal(false);
     setRating(1);
+    setEmail("");
     setReviewText("");
+    setName("");
     setShowThanksModal(true);
   };
 
@@ -186,9 +188,10 @@ const Reviews = () => {
             </Modal.Footer>
           </Form>
         </Modal.Body>
-        </div> 
+       </div>
       </Modal>
       <Modal show={showThanksModal} onHide={handleCloseThanksModal}>
+      <div className="darkModal">
         <Modal.Header closeButton>
           <Modal.Title>Thanks for Your Review</Modal.Title>
         </Modal.Header>
@@ -200,7 +203,7 @@ const Reviews = () => {
             Close
           </Button>
         </Modal.Footer>
-        
+        </div> 
       </Modal>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Spinner } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { collection, where, getDocs, query, orderBy } from "firebase/firestore";
@@ -22,7 +22,7 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         const userName = user.displayName;
         const userEmail = user.email;
@@ -35,12 +35,8 @@ const Profile = () => {
         fetchUserData(uid);
       }
     });
-  
-    // Cleanup the listener when the component unmounts
-    return () => {
-      unsubscribe();
-    };
-  }, []); // Empty dependency array to run this effect only once
+  });
+   // Empty dependency array to run this effect only once
   
 
   const fetchUserData = async () => {
