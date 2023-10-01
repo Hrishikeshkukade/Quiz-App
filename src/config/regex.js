@@ -1,5 +1,5 @@
-const constant = {
+const regex = {
     emailConstant: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 }
 
-export default constant;
+export default regex;

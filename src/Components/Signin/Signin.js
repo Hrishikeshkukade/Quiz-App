@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Button, Nav } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-import GoogleSigninButtton from "../../UI/GoogleSigninButton/GoogleSigninButton";
 import debounce from "lodash/debounce";
-import constant from "../../config/Constant";
-
+import regex from "../../config/regex";
 import {
   signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import ErrorModal from "../../UI/ErrorModal";
@@ -17,7 +12,7 @@ import Spinner from "../../UI/Spinner";
 import classes from "./Signin.module.css";
 
 const Signin = () => {
-  const [formDataAndValidation, setFormDataAndValidation] = useState({
+  const [formData, setFormData] = useState({
     email: {
       value: "",
       isValid: true,
@@ -33,34 +28,19 @@ const Signin = () => {
 
   const navigate = useNavigate();
 
-  const debouncedEmailChangeHandler = debounce((newEmail) => {
-    setFormDataAndValidation((prevState) => ({
-      ...prevState,
-      email: {
-        value: newEmail,
-        isValid: constant.emailConstant.test(newEmail),
+  const debouncedChangeHandler = debounce((key, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [key]: {
+        value: value,
+        isValid: key === "email" ? regex.emailConstant.test(value) : value.length >= 6,
       },
     }));
   }, 1000);
 
-  const emailChangeHandler = (e) => {
-    const newEmail = e.target.value;
-    debouncedEmailChangeHandler(newEmail);
-  };
-
-  const debouncedPasswordChangeHandler = debounce((newPassword) => {
-    setFormDataAndValidation((prevState) => ({
-      ...prevState,
-      password: {
-        value: newPassword,
-        isValid: newPassword.length >= 6,
-      },
-    }));
-  }, 1000);
-
-  const passwordChangeHandler = (e) => {
-    const newPassword = e.target.value;
-    debouncedPasswordChangeHandler(newPassword);
+  const inputChangeHandler = (key, e) => {
+    const newValue = e.target.value;
+    debouncedChangeHandler(key, newValue);
   };
 
   const closeModal = () => {
@@ -69,7 +49,7 @@ const Signin = () => {
 
   const signinHandler = async (e) => {
     e.preventDefault();
-    const { email, password } = formDataAndValidation;
+    const { email, password } = formData;
     if (!email.isValid || !password.isValid) {
       return;
     }
@@ -82,49 +62,44 @@ const Signin = () => {
         password.value
       );
       const user = userCredential.user;
-      // console.log(user);
-
-      // console.log("Signed in user:", user);
       sessionStorage.setItem("authenticated", "true");
       navigate("/dashboard");
     } catch (error) {
-      if (error.code === "auth/invalid-email") {
-        setError("Email is not valid");
-      } else if (error.code === "auth/user-not-found") {
-        setError("User is not registered");
-      } else if (error.code === "auth/wrong-password") {
-        setError("Wrong password");
-      } else if (error.code === "auth/missing-password") {
-        setError("Password is required");
-      } else if (error.code === "auth/network-request-failed") {
-        setError("Network problem, please try again later!");
-      } else {
-        setError(error.message);
-      }
-      setShowErrorModal(true);
+      handleAuthError(error);
     } finally {
       setIsLoading(false);
-      setFormDataAndValidation({
-        email: {
-          value: "",
-          isValid: true,
-        },
-        password: {
-          value: "",
-          isValid: true,
-        },
-      });
+      resetFormData();
     }
   };
 
-  const GoogleSigninHandler = async () => {
-    const provider = new GoogleAuthProvider();
-
-    try {
-      await signInWithRedirect(auth, provider);
-    } catch (error) {
-      console.log("Google Sign-In Error:", error);
+  const handleAuthError = (error) => {
+    if (error.code === "auth/invalid-email") {
+      setError("Email is not valid");
+    } else if (error.code === "auth/user-not-found") {
+      setError("User is not registered");
+    } else if (error.code === "auth/wrong-password") {
+      setError("Wrong password");
+    } else if (error.code === "auth/missing-password") {
+      setError("Password is required");
+    } else if (error.code === "auth/network-request-failed") {
+      setError("Network problem, please try again later!");
+    } else {
+      setError(error.message);
     }
+    setShowErrorModal(true);
+  };
+
+  const resetFormData = () => {
+    setFormData({
+      email: {
+        value: "",
+        isValid: true,
+      },
+      password: {
+        value: "",
+        isValid: true,
+      },
+    });
   };
 
   return (
@@ -132,26 +107,26 @@ const Signin = () => {
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
-          onChange={emailChangeHandler}
+          onChange={(e) => inputChangeHandler("email", e)}
           type="email"
           placeholder="Enter email"
           required
           className={classes.darkInput}
         />
-        {!formDataAndValidation.email.isValid && formDataAndValidation.email.value && (
+        {!formData.email.isValid && formData.email.value && (
           <Form.Text className="text-danger">Invalid email</Form.Text>
         )}
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
         <Form.Control
-          onChange={passwordChangeHandler}
+          onChange={(e) => inputChangeHandler("password", e)}
           type="password"
           placeholder="Password"
           required
           className={classes.darkInput}
         />
-        {!formDataAndValidation.password.isValid && formDataAndValidation.password.value && (
+        {!formData.password.isValid && formData.password.value && (
           <Form.Text className="text-danger">
             Password must be at least 6 characters long
           </Form.Text>
@@ -173,4 +148,6 @@ const Signin = () => {
 };
 
 export default Signin;
+
+
 

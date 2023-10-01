@@ -8,34 +8,18 @@ import {
   Button,
 } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-// import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase";
-import DarkTheme from "../Components/DarkTheme/DarkTheme";
-
-// import {BrowserRouter as Router, NavLink} from "react-router-dom";
+import { auth } from "../../firebase";
+import DarkTheme from "../../Components/DarkTheme/DarkTheme";
+import styles from "./NavbarStyles";
 
 const NavBar = () => {
-  const styles = {
-    dropdown: {
-      borderRadius: "50%",
-      width: "40px",
-      height: "40px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    darkModal: {
-      backgroundColor: "var(--background-color)",
-      color: "var(--text-color)",
-      borderRadius: "5px",
-      /* Add any other dark theme styles you need for the modal */
-    },
-  };
+  const [userData, setUserData] = useState({
+    email: "",
+    gender: "",
+  });
 
   const [authenticatedUser, setAuthenticatedUser] = useState(auth.currentUser);
-  const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
   const [loading, setLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -43,9 +27,11 @@ const NavBar = () => {
     const listenAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         const userEmail = user.email;
-        setEmail(userEmail);
-        setGender(user.gender);
-        console.log(gender);
+        const userGender = user.gender;
+        setUserData({
+          email: userEmail,
+          gender: userGender,
+        });
         setAuthenticatedUser(user);
       } else {
         setAuthenticatedUser(null);
@@ -55,13 +41,14 @@ const NavBar = () => {
     return () => {
       listenAuth();
     };
-  });
+  }, []);
 
   const navigate = useNavigate();
 
   const logoutModalHandler = () => {
     setShowLogoutModal(true);
   };
+
   const hideLogoutModal = () => {
     setShowLogoutModal(false);
   };
@@ -71,28 +58,23 @@ const NavBar = () => {
       .then(() => {
         sessionStorage.setItem("authenticated", "false");
         navigate("/");
-        console.log("signed out");
-        // Sign-out successful.
       })
       .catch((error) => {
         console.log(error);
-        // An error happened.
       });
     setShowLogoutModal(false);
   };
-  // const imageSource = authenticatedUser && gender === "male" ?
-  // `/Boy.jpg` :
-  // 'Girl.jpg';
+
   if (loading) {
-    return;
+    return null; // Return some loading indicator here
   }
+
   return (
     <Navbar data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand>Quizknowledge</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          {/* <Nav className="justify-content-end"> */}
           <Nav className="ms-auto">
             {authenticatedUser ? (
               <Dropdown align="end">
@@ -111,17 +93,8 @@ const NavBar = () => {
                       marginRight: "4px",
                     }}
                   />
-                  {/* <Row>
-          <Col xs={6} md={4}>
-          <Image src={`./public/Boy.jpg/${authenticatedUser.gender}`} roundedCircle />
-
-        </Col>
-        </Row> */}
-                  {email}
-
-                  {/* <i className="fas fa-user"></i> Font Awesome icon */}
+                  {userData.email}
                 </Dropdown.Toggle>
-
                 <Dropdown.Menu>
                   <Dropdown.Item as={NavLink} to="/dashboard">
                     Dashboard
@@ -132,7 +105,6 @@ const NavBar = () => {
                   <Dropdown.Item as={NavLink} to="/settings">
                     Settings
                   </Dropdown.Item>
-                  {/* <Dropdown.Item href="#settings">Settings</Dropdown.Item> */}
                   <Dropdown.Item onClick={logoutModalHandler}>
                     Logout
                   </Dropdown.Item>
@@ -151,7 +123,7 @@ const NavBar = () => {
                 </Nav.Link>
                 <Nav.Link as={NavLink} to="/about">
                   About
-                </Nav.Link>{" "}
+                </Nav.Link>
                 <Nav.Link as={NavLink} to="/reviews">
                   Reviews
                 </Nav.Link>

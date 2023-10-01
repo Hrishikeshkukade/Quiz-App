@@ -11,7 +11,7 @@ import ErrorModal from "../../UI/ErrorModal";
 import Spinner from "../../UI/Spinner";
 import debounce from "lodash/debounce";
 import styles from "./RegisterStyles";
-import constant from "../../config/Constant";
+import regex from "../../config/regex";
 import { useTheme } from "../../context/ThemeContext";
 
 function Register() {
@@ -68,24 +68,8 @@ function Register() {
     }, 1000);
   };
 
-  const nameChangeHandler = (e) => {
-    const newName = e.target.value;
-    debouncedChangeHandler("name", newName, (value) => value.trim() !== "")(newName);
-  };
-
-  const emailChangeHandler = (e) => {
-    const newEmail = e.target.value;
-    debouncedChangeHandler("email", newEmail, (value) => constant.emailConstant.test(value))(newEmail);
-  };
-
-  const passwordChangeHandler = (e) => {
-    const newPassword = e.target.value;
-    debouncedChangeHandler("password", newPassword, (value) => value.length >= 6)(newPassword);
-  };
-
-  const confirmPasswordChangeHandler = (e) => {
-    const newConfirmPassword = e.target.value;
-    debouncedChangeHandler("confirmPassword", newConfirmPassword, (value) => value === formDataAndValidation.password.value)(newConfirmPassword);
+  const handleInputChange = (field, newValue, validator) => {
+    debouncedChangeHandler(field, newValue, validator)(newValue);
   };
 
   const closeModal = () => {
@@ -95,12 +79,8 @@ function Register() {
 
   const signupHandler = async (e) => {
     e.preventDefault();
-    if (
-      !formDataAndValidation.name.isValid ||
-      !formDataAndValidation.email.isValid ||
-      !formDataAndValidation.password.isValid ||
-      !formDataAndValidation.confirmPassword.isValid
-    ) {
+    const { name, email, password, confirmPassword } = formDataAndValidation;
+    if (!name.isValid || !email.isValid || !password.isValid || !confirmPassword.isValid) {
       // Handle validation error, show a message, etc.
       return;
     }
@@ -108,11 +88,11 @@ function Register() {
       setIsLoading(true);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        formDataAndValidation.email.value,
-        formDataAndValidation.password.value
+        email.value,
+        password.value
       );
       await updateProfile(userCredential.user, {
-        displayName: formDataAndValidation.name.value,
+        displayName: name.value,
         gender: formDataAndValidation.gender.value,
       });
       const user = userCredential.user;
@@ -123,9 +103,9 @@ function Register() {
       // Add user data to Firestore with the generated UID
       const docRef = await addDoc(collection(db, "users"), {
         uid: uid,
-        name: formDataAndValidation.name.value,
-        email: formDataAndValidation.email.value,
-        password: formDataAndValidation.password.value,
+        name: name.value,
+        email: email.value,
+        password: password.value,
         gender: formDataAndValidation.gender.value,
       });
 
@@ -152,7 +132,10 @@ function Register() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Name</Form.Label>
           <Form.Control
-            onChange={nameChangeHandler}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              handleInputChange("name", newValue, (value) => value.trim() !== "");
+            }}
             type="text"
             placeholder="Enter Your Name"
             required
@@ -186,7 +169,10 @@ function Register() {
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control
-            onChange={emailChangeHandler}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              handleInputChange("email", newValue, (value) => regex.emailConstant.test(value));
+            }}
             type="email"
             placeholder="Enter email"
             required
@@ -200,7 +186,10 @@ function Register() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            onChange={passwordChangeHandler}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              handleInputChange("password", newValue, (value) => value.length >= 6);
+            }}
             type="password"
             placeholder="Password"
             required
@@ -216,7 +205,10 @@ function Register() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
-            onChange={confirmPasswordChangeHandler}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              handleInputChange("confirmPassword", newValue, (value) => value === formDataAndValidation.password.value);
+            }}
             type="password"
             placeholder="Confirm Password"
             required
@@ -248,4 +240,5 @@ function Register() {
 }
 
 export default Register;
+
 
