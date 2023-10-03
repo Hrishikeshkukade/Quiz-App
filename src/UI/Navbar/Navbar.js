@@ -12,25 +12,35 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import DarkTheme from "../../Components/DarkTheme/DarkTheme";
 import styles from "./NavbarStyles";
+import { doc,  getDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const NavBar = () => {
   const [userData, setUserData] = useState({
     email: "",
     gender: "",
+    
   });
-
+  const [profilePicture, setProfilePicture] = useState(null);
   const [authenticatedUser, setAuthenticatedUser] = useState(auth.currentUser);
   const [loading, setLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
-    const listenAuth = onAuthStateChanged(auth, (user) => {
+    const listenAuth = onAuthStateChanged(auth, async(user) => {
       if (user) {
         const userEmail = user.email;
         const userGender = user.gender;
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        const userData = userDocSnapshot.data();
+        const profilePictureURL = userData?.profilePicture || null;
+       
+        setProfilePicture(profilePictureURL);
         setUserData({
           email: userEmail,
           gender: userGender,
+       
         });
         setAuthenticatedUser(user);
       } else {
@@ -84,7 +94,7 @@ const NavBar = () => {
                   styles={styles.dropdown}
                 >
                   <img
-                    src="/blank.jpg"
+                     src={profilePicture || "./blank.jpg"}
                     alt="Profile"
                     className="rounded-circle"
                     style={{

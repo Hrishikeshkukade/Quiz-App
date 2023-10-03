@@ -1,46 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form, Nav } from "react-bootstrap";
-import classes from "./Register.module.css";
-import { NavLink, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { updateProfile } from "firebase/auth";
-import { auth } from "../../firebase";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebase";
-import ErrorModal from "../../UI/ErrorModal";
-import Spinner from "../../UI/Spinner";
-import debounce from "lodash/debounce";
-import styles from "./RegisterStyles";
-import regex from "../../config/regex";
-import { useTheme } from "../../context/ThemeContext";
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Nav } from 'react-bootstrap';
+import classes from './Register.module.css';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
+import { auth } from '../../firebase';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../firebase';
+import ErrorModal from '../../UI/ErrorModal/ErrorModal';
+import Spinner from '../../UI/Spinner';
+import debounce from 'lodash/debounce';
+import styles from './RegisterStyles';
+import regex from '../../config/regex';
+
 
 function Register() {
   const [formDataAndValidation, setFormDataAndValidation] = useState({
     name: {
-      value: "",
+      value: '',
       isValid: true,
     },
     email: {
-      value: "",
+      value: '',
       isValid: true,
     },
     password: {
-      value: "",
+      value: '',
       isValid: true,
     },
     confirmPassword: {
-      value: "",
+      value: '',
       isValid: true,
     },
     gender: {
-      value: "",
+      value: '',
       isValid: true,
     },
   });
 
-  const theme = useTheme();
 
-  const [error, setError] = useState("");
+
+  const [error, setError] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,9 +48,9 @@ function Register() {
 
   useEffect(() => {
     // Check if the user is already authenticated when the component mounts
-    const authenticated = sessionStorage.getItem("authenticated");
-    if (authenticated === "true") {
-      navigate("/dashboard");
+    const authenticated = sessionStorage.getItem('authenticated');
+    if (authenticated === 'true') {
+      navigate('/dashboard');
     }
   }, [navigate]);
 
@@ -80,7 +80,12 @@ function Register() {
   const signupHandler = async (e) => {
     e.preventDefault();
     const { name, email, password, confirmPassword } = formDataAndValidation;
-    if (!name.isValid || !email.isValid || !password.isValid || !confirmPassword.isValid) {
+    if (
+      !name.isValid ||
+      !email.isValid ||
+      !password.isValid ||
+      !confirmPassword.isValid
+    ) {
       // Handle validation error, show a message, etc.
       return;
     }
@@ -89,11 +94,13 @@ function Register() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email.value,
-        password.value
+        password.value,
+        
       );
       await updateProfile(userCredential.user, {
         displayName: name.value,
         gender: formDataAndValidation.gender.value,
+       
       });
       const user = userCredential.user;
 
@@ -101,22 +108,23 @@ function Register() {
       const uid = user.uid;
 
       // Add user data to Firestore with the generated UID
-      const docRef = await addDoc(collection(db, "users"), {
+      const docRef = await addDoc(collection(db, 'users'), {
         uid: uid,
         name: name.value,
         email: email.value,
         password: password.value,
         gender: formDataAndValidation.gender.value,
+        photoURL: user.photoURL
       });
 
-      console.log("User registered and document written with ID: ", docRef.id);
-      navigate("/dashboard");
-      sessionStorage.setItem("authenticated", "true");
+      console.log('User registered and document written with ID: ', docRef.id);
+      navigate('/dashboard');
+      sessionStorage.setItem('authenticated', 'true');
     } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        setError("Email already exists");
-      } else if (error.code === "auth/network-request-failed") {
-        setError("Network problem, please try again later!");
+      if (error.code === 'auth/email-already-in-use') {
+        setError('Email already exists');
+      } else if (error.code === 'auth/network-request-failed') {
+        setError('Network problem, please try again later!');
       } else {
         setError(error.message);
       }
@@ -134,16 +142,21 @@ function Register() {
           <Form.Control
             onChange={(e) => {
               const newValue = e.target.value;
-              handleInputChange("name", newValue, (value) => value.trim() !== "");
+              handleInputChange(
+                'name',
+                newValue,
+                (value) => value.trim() !== '',
+              );
             }}
             type="text"
             placeholder="Enter Your Name"
             required
             className={classes.darkInput}
           />
-          {!formDataAndValidation.name.isValid && formDataAndValidation.name.value && (
-            <Form.Text className="text-danger">Name is required</Form.Text>
-          )}
+          {!formDataAndValidation.name.isValid &&
+            formDataAndValidation.name.value && (
+              <Form.Text className="text-danger">Name is required</Form.Text>
+            )}
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicGender">
           <Form.Label>Gender</Form.Label>
@@ -171,16 +184,19 @@ function Register() {
           <Form.Control
             onChange={(e) => {
               const newValue = e.target.value;
-              handleInputChange("email", newValue, (value) => regex.emailConstant.test(value));
+              handleInputChange('email', newValue, (value) =>
+                regex.emailConstant.test(value),
+              );
             }}
             type="email"
             placeholder="Enter email"
             required
             className={classes.darkInput}
           />
-          {!formDataAndValidation.email.isValid && formDataAndValidation.email.value && (
-            <Form.Text className="text-danger">Invalid email</Form.Text>
-          )}
+          {!formDataAndValidation.email.isValid &&
+            formDataAndValidation.email.value && (
+              <Form.Text className="text-danger">Invalid email</Form.Text>
+            )}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -188,7 +204,11 @@ function Register() {
           <Form.Control
             onChange={(e) => {
               const newValue = e.target.value;
-              handleInputChange("password", newValue, (value) => value.length >= 6);
+              handleInputChange(
+                'password',
+                newValue,
+                (value) => value.length >= 6,
+              );
             }}
             type="password"
             placeholder="Password"
@@ -196,33 +216,39 @@ function Register() {
             className={classes.darkInput}
           />
 
-          {!formDataAndValidation.password.isValid && formDataAndValidation.password.value && (
-            <Form.Text className="text-danger">
-              Password must be at least 6 characters long
-            </Form.Text>
-          )}
+          {!formDataAndValidation.password.isValid &&
+            formDataAndValidation.password.value && (
+              <Form.Text className="text-danger">
+                Password must be at least 6 characters long
+              </Form.Text>
+            )}
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             onChange={(e) => {
               const newValue = e.target.value;
-              handleInputChange("confirmPassword", newValue, (value) => value === formDataAndValidation.password.value);
+              handleInputChange(
+                'confirmPassword',
+                newValue,
+                (value) => value === formDataAndValidation.password.value,
+              );
             }}
             type="password"
             placeholder="Confirm Password"
             required
             className={classes.darkInput}
           />
-          {!formDataAndValidation.confirmPassword.isValid && formDataAndValidation.confirmPassword.value && (
-            <Form.Text className="text-danger">
-              Passwords do not match
-            </Form.Text>
-          )}
+          {!formDataAndValidation.confirmPassword.isValid &&
+            formDataAndValidation.confirmPassword.value && (
+              <Form.Text className="text-danger">
+                Passwords do not match
+              </Form.Text>
+            )}
         </Form.Group>
 
         <Button disabled={isLoading} variant="primary" type="submit">
-          {isLoading ? <Spinner /> : "Submit"}
+          {isLoading ? <Spinner /> : 'Submit'}
         </Button>
         <ErrorModal
           show={showErrorModal}
@@ -240,5 +266,3 @@ function Register() {
 }
 
 export default Register;
-
-

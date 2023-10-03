@@ -1,4 +1,4 @@
-/* Reviews.css */
+
 
 /* Style the outer container */
 .modalClass{
@@ -9,7 +9,7 @@
   background-color: var(--background-color);
   color: var(--text-color);
   border-radius: 5px;
-  /* Add any other dark theme styles you need for the modal */
+  
 }
 .review-container {
     /* background-color: #f5f5f5; */

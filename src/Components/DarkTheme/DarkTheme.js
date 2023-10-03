@@ -1,6 +1,6 @@
 import React from "react";
-import { ReactComponent as Sun } from "../../config/Sun.svg";
-import { ReactComponent as Moon } from "../../config/Moon.svg";
+import { ReactComponent as Sun } from "../../assets/Sun.svg";
+import { ReactComponent as Moon } from "../../assets/Moon.svg";
 import "./DarkTheme.css";
 import { useTheme } from "../../context/ThemeContext"; // Import the useTheme hook
 

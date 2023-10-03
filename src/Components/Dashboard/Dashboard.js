@@ -7,7 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import styles from "./DashboardStyles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Rules from "../Rules";
+import Rules from "../Rules/Rules";
 import notify from "../../config/Notify";
 
 import "./Dashboard.css";
@@ -219,9 +219,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* {startQuiz ?  <div style={styles.button2}>
-        <p>Time Left: {timeLeft} seconds</p>
-      </div> : null} */}
+  
       <ToastContainer
         position="top-center"
         autoClose={5000}

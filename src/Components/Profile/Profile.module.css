@@ -12,6 +12,27 @@
     margin-right: 20px;
     list-style: none;
   }
+  .profilePicture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+  }
+  
+  .profileImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  .profileImageInput {
+    /* border: 1px solid #000;
+    cursor: pointer; */
+    display: none;
+  }
+  
   @media (max-width: 504px){
     .container{
      width: 60%;

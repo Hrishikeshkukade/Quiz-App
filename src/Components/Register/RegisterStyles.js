@@ -20,13 +20,7 @@ const styles = {
       justifyContent: "center",
       padding: "20px",
     },
-    // darkInput: {
-    //   backgroundColor: "var( --input-backgroundcolor)",
-    //   color: "var( --input-textcolor)",
-    //   '::placeholder': {
-    //     color: "white", // Replace with your desired placeholder text color
-    //   },
-    // },
+  
    
   };
 export default styles;

@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import ErrorModal from "../../UI/ErrorModal";
+import ErrorModal from "../../UI/ErrorModal/ErrorModal";
 import Spinner from "../../UI/Spinner";
 import classes from "./Signin.module.css";
 
@@ -77,7 +77,9 @@ const Signin = () => {
       setError("Email is not valid");
     } else if (error.code === "auth/user-not-found") {
       setError("User is not registered");
-    } else if (error.code === "auth/wrong-password") {
+    }else if (error.code === "auth/invalid-login-credentials") {
+      setError("User is not registered")
+    }else if (error.code === "auth/wrong-password") {
       setError("Wrong password");
     } else if (error.code === "auth/missing-password") {
       setError("Password is required");
