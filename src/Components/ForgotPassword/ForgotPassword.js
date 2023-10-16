@@ -57,6 +57,7 @@ const ForgotPassword = () => {
             type="email"
             placeholder="Enter email"
             required
+            className="darkInput"
           />
              
          

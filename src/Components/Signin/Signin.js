@@ -25,6 +25,7 @@ const Signin = () => {
   const [error, setError] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  
 
   const navigate = useNavigate();
 
@@ -36,11 +37,12 @@ const Signin = () => {
         isValid: key === "email" ? regex.emailConstant.test(value) : value.length >= 6,
       },
     }));
-  }, 1000);
+  },1000);
 
   const inputChangeHandler = (key, e) => {
     const newValue = e.target.value;
     debouncedChangeHandler(key, newValue);
+    console.log(newValue)
   };
 
   const closeModal = () => {

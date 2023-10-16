@@ -27,6 +27,8 @@ const Dashboard = () => {
   const [initialTime, setInitialTime] = useState(180);
   const [timerInterval, setTimerInterval] = useState(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+
 
   // const [correctAnswers, setCorrectAnswers] = useState(null);
   const navigate = useNavigate();
@@ -43,6 +45,11 @@ const Dashboard = () => {
 
   const startQuizHandler = () => {
     setShowRules(true);
+    setUserResponses([]);
+    setUserMarks(null);
+    setShowRules(true);
+    setQuizSubmitted(false); 
+    
   };
 
   useEffect(() => {
@@ -113,6 +120,10 @@ const Dashboard = () => {
   };
 
   const handleSubmit = async () => {
+    if (userResponses.length !== quizData.length) {
+      notify("Please complete all questions before submitting.", true);
+      return;
+    }
     // Calculate user marks
     let marks = 0;
     for (let i = 0; i < quizData.length; i++) {
@@ -155,8 +166,12 @@ const Dashboard = () => {
   };
 
   const handleTimeUp = () => {
-    handleSubmit(); // Automatically submit the quiz when time is up
+    if (startQuiz && !quizSubmitted) {
+      setQuizSubmitted(true); // Set the flag to prevent further submissions
+       // Automatically submit the quiz when time is up
+    }
   };
+  
 
   return (
     <div>

@@ -18,6 +18,8 @@ import classes from './Profile.module.css';
 import notify from '../../config/Notify';
 import { ToastContainer } from 'react-toastify';
 import { useTheme } from '../../context/ThemeContext';
+import { BiPencil } from 'react-icons/bi'
+import {  useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [userData, setUserData] = useState({
@@ -34,7 +36,9 @@ const Profile = () => {
   const { name, email, uid, previousQuizMarks, userResponses, questions, correctAnswer, userRank, profilePicture } = userData;
   const theme = useTheme();
   const profilePictureInputRef = useRef(null);
-
+  const navigate = useNavigate();
+ 
+ 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -176,6 +180,12 @@ const Profile = () => {
     profilePictureInputRef.current.click();
   };
 
+  const handleEditEmailClick = () => {
+   
+   
+    navigate('/update-email'); 
+  };
+
   return (
     <>
       <Card className={classes.container}>
@@ -197,7 +207,12 @@ const Profile = () => {
           <Card.Title>Name</Card.Title>
           <Card.Text>{name}</Card.Text>
           <Card.Title>Email</Card.Title>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
           <Card.Text>{email}</Card.Text>
+          <button onClick={handleEditEmailClick} className="btn btn-link" >
+              <BiPencil style={{ marginBottom: '12px'}}/> 
+            </button>
+            </div>
           {/* {userRank !== null && (
             <>
               <Card.Title>Your Rank</Card.Title>
@@ -243,5 +258,5 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default React.memo(Profile);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Navbar,
@@ -6,45 +6,50 @@ import {
   Dropdown,
   Modal,
   Button,
-} from "react-bootstrap";
-import { NavLink, useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../../firebase";
-import DarkTheme from "../../Components/DarkTheme/DarkTheme";
-import styles from "./NavbarStyles";
-import { doc,  getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+} from 'react-bootstrap';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
+import DarkTheme from '../../Components/DarkTheme/DarkTheme';
+import styles from './NavbarStyles';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { Spinner } from 'react-bootstrap';
 
 const NavBar = () => {
   const [userData, setUserData] = useState({
-    email: "",
-    gender: "",
-    
+    name: '',
+    gender: '',
   });
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicture, setProfilePicture] = useState('./blank.jpg');
   const [authenticatedUser, setAuthenticatedUser] = useState(auth.currentUser);
   const [loading, setLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
-    const listenAuth = onAuthStateChanged(auth, async(user) => {
+    const listenAuth = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userEmail = user.email;
+        const userName = user.displayName;
         const userGender = user.gender;
         const userDocRef = doc(db, 'users', user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
         const userData = userDocSnapshot.data();
         const profilePictureURL = userData?.profilePicture || null;
-       
+
         setProfilePicture(profilePictureURL);
         setUserData({
-          email: userEmail,
+          name: userName,
           gender: userGender,
-       
         });
         setAuthenticatedUser(user);
+
+         // Simulate a delay (e.g., 2 seconds) before hiding the loading spinner
+         setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       } else {
         setAuthenticatedUser(null);
+        setLoading(false); // Stop loading even if not authenticated
       }
       setLoading(false);
     });
@@ -66,8 +71,8 @@ const NavBar = () => {
   const logoutHandler = () => {
     signOut(auth)
       .then(() => {
-        sessionStorage.setItem("authenticated", "false");
-        navigate("/");
+        sessionStorage.setItem('authenticated', 'false');
+        navigate('/');
       })
       .catch((error) => {
         console.log(error);
@@ -76,7 +81,13 @@ const NavBar = () => {
   };
 
   if (loading) {
-    return null; // Return some loading indicator here
+    return (
+      <Navbar data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
+        <Container>
+          <Spinner animation="border" />
+        </Container>
+      </Navbar>
+    );
   }
 
   return (
@@ -94,16 +105,16 @@ const NavBar = () => {
                   styles={styles.dropdown}
                 >
                   <img
-                     src={profilePicture || "./blank.jpg"}
+                    src={profilePicture || './blank.jpg'}
                     alt="Profile"
                     className="rounded-circle"
                     style={{
-                      width: "40px",
-                      height: "40px",
-                      marginRight: "4px",
+                      width: '40px',
+                      height: '40px',
+                      marginRight: '4px',
                     }}
                   />
-                  {userData.email}
+                  {userData.name}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item as={NavLink} to="/dashboard">
@@ -144,7 +155,7 @@ const NavBar = () => {
         </Navbar.Collapse>
         {showLogoutModal && (
           <Modal
-            style={{ color: "black" }}
+            style={{ color: 'black' }}
             show={showLogoutModal}
             onHide={hideLogoutModal}
           >

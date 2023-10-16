@@ -11,7 +11,10 @@
     color: var(--input-textcolor) !important;
   }
   
-@media (max-width: 504px){
+  .darkInput::placeholder {
+    color: #ccc !important; /* Replace with your desired placeholder text color */
+  }
+  @media (max-width: 504px){
     .formContainer{
      width: 60%;
      margin-right: 20%;
@@ -33,6 +36,14 @@
      width: 70%;
     margin-left: 15%;
       
+    }
+    
+  }
+  @media (max-width: 393px){
+    .formContainer{
+     width: 70%;
+     margin-right: 32%;
+     margin-left: 17%;
     }
     
   }

@@ -5,21 +5,22 @@ const Timer = ({ initialTime, startQuiz, onTimeUp }) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
 
   useEffect(() => {
+    let timer;
+  
     if (startQuiz) {
-      const timer = setInterval(() => {
+      timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
-
+  
       setTimeout(() => {
-        if (startQuiz) {
-          clearInterval(timer);
-          onTimeUp(); // Callback function when time is up
-        }
+        clearInterval(timer);
+        onTimeUp(); // Callback function when time is up
       }, initialTime * 1000);
-
-      return () => clearInterval(timer); // Clear the interval when unmounting
     }
-  }, [startQuiz, initialTime, onTimeUp]);
+  
+    return () => clearInterval(timer); // Clear the interval when unmounting or when startQuiz becomes false
+  }, [startQuiz, initialTime, onTimeUp, timeLeft]);
+  
 
   return (
     <div style={styles.button2}>

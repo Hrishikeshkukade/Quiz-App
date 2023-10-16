@@ -14,6 +14,7 @@ import Profile from './Components/Profile/Profile';
 import About from './Components/About/About';
 import Reviews from './Components/Reviews/Reviews';
 import Settings from './Components/Settings/Settings';
+import UpdateEmail from './Components/UpdateEmail/UpdateEmail';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -73,6 +74,15 @@ function App() {
         ) : (
           <Route exact path="/signin" element={<Signin />} />
         )}
+          {user ? (
+          <Route
+            path="/update-email"
+            element={<ProtectedRoute element={<UpdateEmail />} />}
+          />
+        ) : (
+          <Route exact path="/signin" element={<Signin />} />
+        )}
+
 
         <Route exact path="/fp" element={<ForgotPassword />} />
         <Route exact path="/about" element={<About />} />
